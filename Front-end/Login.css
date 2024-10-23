@@ -1,0 +1,81 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+    background-color: #3b83bd; /* Fondo azul */
+    width: 800px;
+    height : 400px;
+    padding: 60px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    display: flex; /* Flexbox para dividir en dos columnas */
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo-container {
+    flex: 0.25; /* Toma el 50% del espacio del container */
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    width: 400px;
+    height: 200px;
+  }
+  
+  form {
+    flex: 1; /* Toma el otro 50% */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .input-container {
+    margin-bottom: 15px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #cfdf09;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #005599;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #005599;
+    box-shadow: 0 0 5px rgba(0, 85, 153, 0.5);
+  }
+
+  .colorwhite {
+    color: white;
+  }
+
+  .space{
+    margin-top: -20px; /* Mueve el objeto 20px hacia arriba */
+  }
