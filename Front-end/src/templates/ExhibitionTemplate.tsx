@@ -1,40 +1,49 @@
 import React from 'react';
+import { exhibition } from '../data/exhibition';
 
-interface ExhibitionTemplateProps {
-  imageSrc: string;
-  imageAlt: string;
-  messageLabel: string;
-  messageValue: string;
-}
+const ExhibitionTemplate: React.FC = () => {
+  const { img, message } = exhibition;
 
-const ExhibitionTemplate: React.FC<ExhibitionTemplateProps> = ({
-  imageSrc,
-  imageAlt,
-  messageLabel,
-  messageValue,
-}) => {
   return (
-    <div className="flex flex-col items-center space-y-8 p-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        {/* Imagen de la exposición */}
-        <div className="flex justify-center">
+    <div className="container mx-auto p-4">
+      <div className="flex flex-col md:flex-row items-center md:items-start space-y-8 md:space-y-0 md:space-x-8">
+        <div className="w-full md:w-1/2 flex justify-center">
           <img
-            src={imageSrc}
-            alt={imageAlt}
-            className="w-60 h-40 object-cover rounded-md shadow-md"
+            src={img}
+            alt="Imagen de la exposición"
+            className="w-full max-w-md h-auto object-cover rounded-md shadow-md"
           />
         </div>
 
-        {/* Mensaje de la exposición */}
-        <div className="col-span-1 md:col-span-2">
-          <label className="text-lg font-semibold mb-2 block">
-            {messageLabel}
-          </label>
-          <textarea
-            value={messageValue}
-            readOnly
-            className="w-full border border-gray-300 rounded-lg p-4"
-          />
+        <div className="w-full md:w-1/2 space-y-4">
+          <div>
+            <label className="text-lg font-semibold mb-2 block">
+              Foto
+            </label>
+            <input
+              type="text"
+              value="imagen.jpg"
+              readOnly
+              className="border border-gray-300 rounded-lg p-2 w-full"
+            />
+          </div>
+
+          <div>
+            <label className="text-lg font-semibold mb-2 block">
+              Mensaje de la Exposición
+            </label>
+            <textarea
+              value={message}
+              readOnly
+              className="w-full border border-gray-300 rounded-lg p-4"
+            />
+          </div>
+
+          <button
+            className="bg-lightLime hover:bg-green-500 text-black font-bold py-2 px-8 rounded-lg transition-transform hover:scale-105 w-full sm:w-auto"
+          >
+            Guardar
+          </button>
         </div>
       </div>
     </div>

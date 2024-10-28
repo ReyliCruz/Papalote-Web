@@ -11,7 +11,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     console.log({ email, password });
 
-    // Lógica para autenticación podría ir aquí
+    // Lógica para autenticación
 
     navigate('/home');
   };

@@ -1,8 +1,6 @@
-// Archivo: src/data/opinions.ts
-
 export interface Opinion {
     opinion: string;
-    calificacion: number; // Calificación en una escala del 1 al 5
+    calificacion: number;
   }
   
   const opinions: Opinion[] = [

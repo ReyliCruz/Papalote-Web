@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface MenuItem {
   name: string;
@@ -11,30 +11,36 @@ interface SidebarProps {
   menuItems: MenuItem[];
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
+const SidebarTest: React.FC<SidebarProps> = ({ menuItems }) => {
   const navigate = useNavigate();
-  const [active, setActive] = useState<string>('');
+  const location = useLocation();
   const [openSubMenus, setOpenSubMenus] = useState<{ [key: string]: boolean }>({});
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedPath, setSelectedPath] = useState<string | null>(null); // Nuevo estado
 
-  const handleItemClick = (name: string, path?: string) => {
-    setActive(name);
-    if (path) navigate(path);
-    setIsOpen(false);
+  const isActive = (path: string): boolean => location.pathname === path;
+
+  useEffect(() => {
+    setSelectedPath(location.pathname); // Actualizar cuando cambia la ruta
+  }, [location]);
+
+  const handleZoneClick = (zoneName: string, path?: string) => {
+    if (path) {
+      navigate(path);
+      setSelectedPath(path); // Actualizar el estado del item seleccionado
+    }
+    setOpenSubMenus({ [zoneName]: !openSubMenus[zoneName] });
   };
 
-  const toggleSubMenu = (name: string) => {
-    setOpenSubMenus((prev) => ({
-      ...prev,
-      [name]: !prev[name],
-    }));
+  const handleSubItemClick = (path: string) => {
+    navigate(path);
+    setSelectedPath(path); // Actualizar el estado del subitem seleccionado
   };
 
   return (
     <div className="relative">
       <button
         className="md:hidden fixed top-4 left-4 z-50 bg-darkBlue p-2 rounded-md"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setOpenSubMenus((prev) => ({ ...prev, menu: !prev.menu }))}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +55,6 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
 
       <div
         className={`bg-darkBlue h-full fixed md:static top-0 left-0 z-40 transform transition-transform duration-300 ease-in-out 
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 
           w-64 md:w-72`}
       >
         <div className="flex flex-col justify-between h-full">
@@ -57,12 +62,13 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
             {menuItems.map((item) => (
               <div key={item.name} className="border-b border-gray-700">
                 <button
-                  onClick={() =>
-                    item.subItems ? toggleSubMenu(item.name) : handleItemClick(item.name, item.path)
-                  }
-                  className={`w-full text-white text-lg py-4 px-6 text- transition-transform hover:scale-105 ${
-                    active === item.name ? 'bg-lightLime text-black font-bold' : ''
-                  }`}
+                  onClick={() => handleZoneClick(item.name, item.path)}
+                  className={`w-full text-lg py-4 px-6 text-left transition-transform hover:scale-105 
+                    ${
+                      selectedPath === item.path && !item.subItems
+                        ? 'bg-lightLime text-black font-bold'
+                        : 'text-white'
+                    }`}
                 >
                   {item.name}
                   {item.subItems && (
@@ -77,10 +83,13 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
                     {item.subItems.map((subItem) => (
                       <button
                         key={subItem.name}
-                        onClick={() => handleItemClick(subItem.name, subItem.path)}
-                        className={`w-full text-white text-md py-2 px-4 text-left transition-transform hover:scale-105 ${
-                          active === subItem.name ? 'bg-green-400 text-black' : ''
-                        }`}
+                        onClick={() => handleSubItemClick(subItem.path!)}
+                        className={`w-full text-md py-2 px-4 text-left transition-transform hover:scale-105 
+                          ${
+                            selectedPath === subItem.path
+                              ? 'bg-lightLime text-black font-bold'
+                              : 'text-white'
+                          }`}
                       >
                         {subItem.name}
                       </button>
@@ -92,7 +101,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
           </div>
 
           <button
-            onClick={() => console.log('Cerrar sesión')}
+            onClick={() => navigate('/login')}
             className="bg-logoutRed text-white text-lg py-4 transition-transform hover:scale-105"
           >
             Cerrar sesión
@@ -103,4 +112,4 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
   );
 };
 
-export default Sidebar;
+export default SidebarTest;

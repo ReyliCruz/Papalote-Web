@@ -18,7 +18,7 @@ const Header: React.FC = () => {
       </div>
 
       <div className="text-white text-base md:text-lg">
-        <span className="font-semibold">Código de acceso:</span> H022
+        <span className="font-semibold">Código de acceso:</span> R2-h0L
       </div>
     </header>
   );

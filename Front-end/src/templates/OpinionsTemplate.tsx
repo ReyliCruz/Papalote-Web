@@ -1,33 +1,30 @@
 import React from 'react';
+import opinions from '../data/opinions';
 
-interface Opinion {
-  rating: number;
-  comment: string;
-}
+const renderStars = (calificacion: number) => {
+  const stars = [];
+  for (let i = 1; i <= 5; i++) {
+    stars.push(i <= calificacion ? '★' : '☆');
+  }
+  return stars.join('');
+};
 
-interface OpinionsTemplateProps {
-  opinions: Opinion[];
-}
-
-const OpinionsTemplate: React.FC<OpinionsTemplateProps> = ({ opinions }) => {
-  const renderStars = (rating: number) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(i <= rating ? '★' : '☆');
-    }
-    return stars.join('');
-  };
-
+const OpinionsTemplate: React.FC = () => {
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold mb-4">Opiniones</h1>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-6 text-center">Opiniones</h1>
 
-      <div className="space-y-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {opinions.map((opinion, index) => (
-          <div key={index} className="flex items-center space-x-4">
-            <div className="text-xl">{renderStars(opinion.rating)}</div>
-            <div className="bg-gray-100 p-2 rounded shadow">
-              {opinion.comment}
+          <div
+            key={index}
+            className="flex flex-col items-center md:flex-row bg-white p-4 rounded-lg shadow-md"
+          >
+            <div className="flex-shrink-0 text-yellow-500 text-2xl md:mr-4 mb-2 md:mb-0">
+              {renderStars(opinion.calificacion)}
+            </div>
+            <div className="bg-gray-100 p-4 rounded-lg flex-grow text-center md:text-left">
+              {opinion.opinion}
             </div>
           </div>
         ))}

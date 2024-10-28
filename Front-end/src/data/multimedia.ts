@@ -1,5 +1,3 @@
-// Archivo: src/data/multimedia.ts
-
 export interface MultimediaItem {
     type: 'image' | 'video';
     src: string;

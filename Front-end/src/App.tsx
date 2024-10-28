@@ -1,12 +1,20 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+
+// Pages
 import Login from './pages/Login';
-import AdminLayout from './layouts/AdminLayout';
 import Home from './pages/Home';
 import Settings from './pages/Settings';
-import Zone from './templates/ZoneTemplate';
 import Zones from './pages/Zones';
+
+// Layouts
+import AdminLayout from './layouts/AdminLayout';
 import ExhibitionLayout from './layouts/ExhibitionLayout';
 import ZoneLayout from './layouts/ZoneLayout';
+
+// Templates
+import ZoneTemplate from './templates/ZoneTemplate';
+
+// Data
 import { basicMenu, advancedMenu } from './data/menus';
 import { zones } from './data/zones';
 
@@ -24,13 +32,14 @@ function App() {
 
         <Route element={<AdminLayout menuItems={advancedMenu} />}>
           <Route path="zonas" element={<Zones />} />
+
           {zones.map((zone) => (
             <Route key={zone.id} path={zone.text.toLowerCase()}>
               <Route
                 index
                 element={
                   <ZoneLayout title={zone.text} primaryColor={zone.color}>
-                    <Zone
+                    <ZoneTemplate
                       title={zone.text}
                       photo={zone.image}
                       message={`Bienvenido a la zona ${zone.text}.`}
@@ -40,6 +49,7 @@ function App() {
                   </ZoneLayout>
                 }
               />
+
               {zone.subItems?.map((subItem) => (
                 <Route
                   key={subItem.name}

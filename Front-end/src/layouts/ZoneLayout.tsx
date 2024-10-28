@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import MultimediaTemplate from '../templates/MultimediaTemplate';
 
 interface ZoneLayoutProps {
   title: string;
@@ -8,7 +9,11 @@ interface ZoneLayoutProps {
 
 const sections = ['Datos básicos', 'Multimedia'];
 
-const ZoneLayout: React.FC<ZoneLayoutProps> = ({ title, primaryColor, children }) => {
+const ZoneLayout: React.FC<ZoneLayoutProps> = ({
+  title,
+  primaryColor,
+  children,
+}) => {
   const [activeSection, setActiveSection] = useState<string>('Datos básicos');
 
   return (
@@ -20,6 +25,7 @@ const ZoneLayout: React.FC<ZoneLayoutProps> = ({ title, primaryColor, children }
         {title}
       </h1>
 
+      {/* Sección de navegación */}
       <div className="flex justify-center space-x-8 border-b-2 border-gray-300 mb-8">
         {sections.map((section) => (
           <button
@@ -27,22 +33,24 @@ const ZoneLayout: React.FC<ZoneLayoutProps> = ({ title, primaryColor, children }
             onClick={() => setActiveSection(section)}
             className={`text-lg pb-2 transition-colors ${
               activeSection === section
-                ? `text-black border-b-2 border-black font-semibold`
+                ? 'font-semibold text-black'
                 : 'text-gray-500'
             }`}
+            style={{
+              borderBottom: activeSection === section ? `2px solid ${primaryColor}` : '2px solid transparent',
+            }}
           >
             {section}
           </button>
         ))}
       </div>
 
+      {/* Contenido dinámico */}
       <div className="mt-4">
         {activeSection === 'Datos básicos' ? (
           <div>{children}</div>
         ) : (
-          <div className="text-center">
-            <p>No hay contenido multimedia disponible.</p>
-          </div>
+          <MultimediaTemplate />
         )}
       </div>
     </div>
