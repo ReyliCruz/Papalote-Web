@@ -2,6 +2,10 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from .models import *
 from .serializers import *
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.hashers import check_password
 
 # Create your views here.
 
@@ -144,3 +148,31 @@ class NotificacionViewSet(viewsets.ModelViewSet):
 class NotificacionTraduccionViewSet(viewsets.ModelViewSet):
     queryset = NotificacionTraduccion.objects.all()
     serializer_class = NotificacionTraduccionSerializer
+
+class LoginView(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            correo = serializer.validated_data['correo']
+            password = serializer.validated_data['password']
+
+            try:
+                usuario = Usuario.objects.get(correo=correo)
+            except Usuario.DoesNotExist:
+                return Response(
+                    {"detail": "Usuario no encontrado."},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            if check_password(password, usuario.password_hash):
+                return Response(
+                    {"detail": "Autenticación exitosa.", "id_usuario": str(usuario.id_usuario)},
+                    status=status.HTTP_200_OK
+                )
+            else:
+                return Response(
+                    {"detail": "Contraseña incorrecta."},
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

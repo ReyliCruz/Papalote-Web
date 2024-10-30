@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.hashers import make_password
 from .models import *
 
 class ConfiguracionGeneralSerializer(serializers.ModelSerializer):
@@ -25,6 +26,15 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = '__all__'
+        extra_kwargs = {
+            'password_hash': {'write_only': True},
+            'foto_perfil': {'required': False},
+        }
+
+    def create(self, validated_data):
+        if 'password_hash' in validated_data:
+            validated_data['password_hash'] = make_password(validated_data['password_hash'])
+        return super().create(validated_data)
 
 class VisitaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -175,3 +185,7 @@ class NotificacionTraduccionSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotificacionTraduccion
         fields = '__all__'
+
+class LoginSerializer(serializers.Serializer):
+    correo = serializers.EmailField()
+    password = serializers.CharField(write_only=True)

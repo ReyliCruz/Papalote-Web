@@ -1,5 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from .views import *
+from django.urls import path
 
 # Crear el router y registrar las vistas
 router = DefaultRouter()
@@ -37,4 +38,6 @@ router.register(r'favoritos', FavoritoViewSet)
 router.register(r'notificaciones', NotificacionViewSet)
 
 # Exportar las rutas
-urlpatterns = router.urls
+urlpatterns = router.urls + [
+    path('login/', LoginView.as_view(), name='login'),
+]
