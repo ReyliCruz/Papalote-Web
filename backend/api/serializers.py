@@ -35,6 +35,11 @@ class UsuarioSerializer(serializers.ModelSerializer):
         if 'password_hash' in validated_data:
             validated_data['password_hash'] = make_password(validated_data['password_hash'])
         return super().create(validated_data)
+    
+    def validate_correo(self, value):
+        if Usuario.objects.filter(correo=value).exists():
+            raise serializers.ValidationError("El usuario con este correo ya existe.")
+        return value
 
 class VisitaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -189,3 +194,18 @@ class NotificacionTraduccionSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     correo = serializers.EmailField()
     password = serializers.CharField(write_only=True)
+
+class MultimediaRedSocialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MultimediaRedSocial
+        fields = '__all__'
+
+class PublicacionTraduccionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PublicacionTraduccion
+        fields = '__all__'
+
+class PreferenciaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Preferencia
+        fields = '__all__'

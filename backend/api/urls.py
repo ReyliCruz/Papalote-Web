@@ -36,6 +36,9 @@ router.register(r'publicaciones', PublicacionViewSet)
 router.register(r'reacciones', ReaccionViewSet)
 router.register(r'favoritos', FavoritoViewSet)
 router.register(r'notificaciones', NotificacionViewSet)
+router.register(r'multimedia', MultimediaRedSocialViewSet)
+router.register(r'publicaciones', PublicacionTraduccionViewSet)
+router.register(r'preferencias', PreferenciaViewSet)
 
 # Exportar las rutas
 urlpatterns = router.urls + [

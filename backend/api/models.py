@@ -170,9 +170,19 @@ class Emoji(models.Model):
     nombre = models.CharField(max_length=50)
     img = models.ImageField(upload_to='emojis/')
 
+class MultimediaRedSocial(models.Model):
+    url_recurso = models.ImageField(upload_to='social/', blank=True, null=True)
+    tipo_recurso = models.ForeignKey(TipoRecurso, on_delete=models.CASCADE)
+
 class Publicacion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    multimedia = models.ForeignKey(MultimediaRedSocial, on_delete=models.CASCADE)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
+
+class PublicacionTraduccion(models.Model):
+    publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
+    idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE)
+    descripcion = models.TextField()
 
 class Reaccion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
@@ -193,3 +203,9 @@ class NotificacionTraduccion(models.Model):
     idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=100)
     descripcion = models.TextField()
+
+class Preferencia(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    zona = models.ForeignKey(Zona, on_delete=models.CASCADE)
+    puntaje_quiz = models.IntegerField()
+    fecha_registro = models.DateTimeField(auto_now_add=True)

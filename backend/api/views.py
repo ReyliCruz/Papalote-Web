@@ -149,6 +149,18 @@ class NotificacionTraduccionViewSet(viewsets.ModelViewSet):
     queryset = NotificacionTraduccion.objects.all()
     serializer_class = NotificacionTraduccionSerializer
 
+class MultimediaRedSocialViewSet(viewsets.ModelViewSet):
+    queryset = MultimediaRedSocial.objects.all()
+    serializer_class = MultimediaRedSocialSerializer
+
+class PublicacionTraduccionViewSet(viewsets.ModelViewSet):
+    queryset = PublicacionTraduccion.objects.all()
+    serializer_class = PublicacionTraduccionSerializer
+
+class PreferenciaViewSet(viewsets.ModelViewSet):
+    queryset = Preferencia.objects.all()
+    serializer_class = PreferenciaSerializer
+
 class LoginView(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
