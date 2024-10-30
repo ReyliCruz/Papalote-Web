@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django local database
+*.sqlite3
+
+# Entornos virtuales (si usas uno dentro del proyecto)
+venv/
+env/
+myenv/
+
+# Logs de Django
+*.log
+
+# Archivos de configuración local / Variables de entorno
+.env
+
+# Archivos estáticos y multimedia generados por Django
+static/
+media/
+staticfiles/
+
+# Migrations (opcional, si quieres ignorarlas en desarrollo)
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# Archivos generados por cache de pruebas
+.pytest_cache/
+
+# Archivos de cobertura
+.coverage
+coverage/
+htmlcov/
+
+# Configuraciones locales del editor / IDE
+.vscode/
+.idea/
+
+# Django schema
+schema.yml
