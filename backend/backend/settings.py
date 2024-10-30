@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-l6n8)de!2y%(3wbi85#0b%0+rg(5=p7twezf@)x@m8-$sj1mkb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    'papalote-backend.onrender.com',
+    'localhost',
+    '127.0.0.1'
+]
 
 # Application definition
 
