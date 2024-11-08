@@ -1,19 +1,34 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GreenButton from '../components/GreenButton';
+import axios from 'axios';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ email, password });
-
-    // Lógica para autenticación
-
-    navigate('/home');
+  
+    if (!email || !password) {
+      console.error("Error: Los campos del correo electrónico y contraseña son requeridos");
+      alert("Error: Los campos del correo electrónico y contraseña son requeridos");
+      return;
+    }
+  
+    try {
+      const response = await axios.post('https://papalote-backend.onrender.com/api/login/', {
+        correo: email,
+        password: password
+      });
+      console.log(response.data.message);
+      navigate('/home');
+    } 
+    catch (error) {
+      console.error("Error de inicio de sesión", error);
+      alert("Error de inicio de sesión: Verifica tus credenciales");
+    }
   };
 
   return (

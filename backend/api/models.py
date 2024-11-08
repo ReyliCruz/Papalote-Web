@@ -63,16 +63,10 @@ class Recompensa(models.Model):
 class Desafio(models.Model):
     nombre = models.CharField(max_length=50)
     img = models.ImageField(upload_to='desafios/')
-
-class Nivel(models.Model):
-    numero_nivel = models.IntegerField()
-    descripcion = models.TextField()
-    valor_meta = models.IntegerField()
-    desafio = models.ForeignKey(Desafio, on_delete=models.CASCADE)
-
-class NivelRecompensa(models.Model):
-    nivel = models.ForeignKey(Nivel, on_delete=models.CASCADE)
-    recompensa = models.ForeignKey(Recompensa, on_delete=models.CASCADE)
+    valor_meta = models.IntegerField(blank=True, null=True)
+    descripcion_es = models.TextField(blank=True, null=True)
+    descripcion_en = models.TextField(blank=True, null=True)
+    recompensa = models.ForeignKey(Recompensa, on_delete=models.CASCADE, blank=True, null=True)
 
 class UsuarioRecompensa(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
@@ -83,8 +77,7 @@ class UsuarioRecompensa(models.Model):
 class UsuarioProgresoDesafio(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     desafio = models.ForeignKey(Desafio, on_delete=models.CASCADE)
-    nivel_actual = models.ForeignKey(Nivel, on_delete=models.CASCADE)
-    progreso_actual = models.IntegerField()
+    progreso_actual = models.IntegerField(default=0)
     completado = models.BooleanField(default=False)
 
 class Zona(models.Model):

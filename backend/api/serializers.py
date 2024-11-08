@@ -66,16 +66,6 @@ class DesafioSerializer(serializers.ModelSerializer):
         model = Desafio
         fields = '__all__'
 
-class NivelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Nivel
-        fields = '__all__'
-
-class NivelRecompensaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NivelRecompensa
-        fields = '__all__'
-
 class UsuarioRecompensaSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsuarioRecompensa

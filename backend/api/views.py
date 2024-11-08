@@ -50,14 +50,6 @@ class DesafioViewSet(viewsets.ModelViewSet):
     queryset = Desafio.objects.all()
     serializer_class = DesafioSerializer
 
-class NivelViewSet(viewsets.ModelViewSet):
-    queryset = Nivel.objects.all()
-    serializer_class = NivelSerializer
-
-class NivelRecompensaViewSet(viewsets.ModelViewSet):
-    queryset = NivelRecompensa.objects.all()
-    serializer_class = NivelRecompensaSerializer
-
 class UsuarioRecompensaViewSet(viewsets.ModelViewSet):
     queryset = UsuarioRecompensa.objects.all()
     serializer_class = UsuarioRecompensaSerializer
