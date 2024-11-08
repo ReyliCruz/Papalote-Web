@@ -90,12 +90,10 @@ class UsuarioProgresoDesafio(models.Model):
 class Zona(models.Model):
     logo = models.ImageField(upload_to='zonas/')
     nombre = models.CharField(max_length=100)
-
-class ZonaTraduccion(models.Model):
-    zona = models.ForeignKey(Zona, on_delete=models.CASCADE)
-    idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE)
-    mensaje = models.TextField()
-    descripcion = models.TextField()
+    mensaje_es = models.TextField(blank=True, null=True)
+    mensaje_en = models.TextField(blank=True, null=True)
+    descripcion_es = models.TextField(blank=True, null=True)
+    descripcion_en = models.TextField(blank=True, null=True)
 
 class Color(models.Model):
     nombre = models.CharField(max_length=50)
@@ -121,29 +119,21 @@ class Exhibicion(models.Model):
     img = models.ImageField(upload_to='exhibiciones/', blank=True, null=True)
     zona = models.ForeignKey(Zona, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100)
-
-class ExhibicionTraduccion(models.Model):
-    exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
-    idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE)
-    mensaje = models.TextField()
+    mensaje_es = models.TextField(blank=True, null=True)
+    mensaje_en = models.TextField(blank=True, null=True)
 
 class Objetivo(models.Model):
     exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
-
-class ObjetivoTraduccion(models.Model):
-    objetivo = models.ForeignKey(Objetivo, on_delete=models.CASCADE)
-    idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE)
-    descripcion = models.TextField()
+    descripcion_es = models.TextField(blank=True, null=True)
+    descripcion_en = models.TextField(blank=True, null=True)
 
 class PaginaExhibicion(models.Model):
     img = models.ImageField(upload_to='paginas/')
     exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
-
-class PaginaExhibicionTraduccion(models.Model):
-    pagina = models.ForeignKey(PaginaExhibicion, on_delete=models.CASCADE)
-    idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE)
-    titulo = models.CharField(max_length=100)
-    contenido = models.TextField()
+    titulo_es = models.CharField(max_length=100, blank=True, null=True)
+    titulo_en = models.CharField(max_length=100, blank=True, null=True)
+    contenido_es = models.TextField(blank=True, null=True)
+    contenido_en = models.TextField(blank=True, null=True)
 
 class CodigoQR(models.Model):
     codigo = models.ImageField(upload_to='qrcodes/', blank=True, null=True)
@@ -181,11 +171,7 @@ class Publicacion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     multimedia = models.ForeignKey(MultimediaRedSocial, on_delete=models.CASCADE)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
-
-class PublicacionTraduccion(models.Model):
-    publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
-    idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE)
-    descripcion = models.TextField()
+    descripcion = models.TextField(blank=True, null=True)
 
 class Reaccion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
@@ -200,12 +186,10 @@ class Favorito(models.Model):
 
 class Notificacion(models.Model):
     fecha_creacion = models.DateTimeField()
-
-class NotificacionTraduccion(models.Model):
-    notificacion = models.ForeignKey(Notificacion, on_delete=models.CASCADE)
-    idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE)
-    titulo = models.CharField(max_length=100)
-    descripcion = models.TextField()
+    titulo_es = models.CharField(max_length=100, blank=True, null=True)
+    titulo_en = models.CharField(max_length=100, blank=True, null=True)
+    descripcion_es = models.TextField(blank=True, null=True)
+    descripcion_en = models.TextField(blank=True, null=True)
 
 class Preferencia(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)

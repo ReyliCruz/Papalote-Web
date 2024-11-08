@@ -70,10 +70,6 @@ class ZonaViewSet(viewsets.ModelViewSet):
     queryset = Zona.objects.all()
     serializer_class = ZonaSerializer
 
-class ZonaTraduccionViewSet(viewsets.ModelViewSet):
-    queryset = ZonaTraduccion.objects.all()
-    serializer_class = ZonaTraduccionSerializer
-
 class ColorViewSet(viewsets.ModelViewSet):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
@@ -90,25 +86,13 @@ class ExhibicionViewSet(viewsets.ModelViewSet):
     queryset = Exhibicion.objects.all()
     serializer_class = ExhibicionSerializer
 
-class ExhibicionTraduccionViewSet(viewsets.ModelViewSet):
-    queryset = ExhibicionTraduccion.objects.all()
-    serializer_class = ExhibicionTraduccionSerializer
-
 class ObjetivoViewSet(viewsets.ModelViewSet):
     queryset = Objetivo.objects.all()
     serializer_class = ObjetivoSerializer
 
-class ObjetivoTraduccionViewSet(viewsets.ModelViewSet):
-    queryset = ObjetivoTraduccion.objects.all()
-    serializer_class = ObjetivoTraduccionSerializer
-
 class PaginaExhibicionViewSet(viewsets.ModelViewSet):
     queryset = PaginaExhibicion.objects.all()
     serializer_class = PaginaExhibicionSerializer
-
-class PaginaExhibicionTraduccionViewSet(viewsets.ModelViewSet):
-    queryset = PaginaExhibicionTraduccion.objects.all()
-    serializer_class = PaginaExhibicionTraduccionSerializer
 
 class CodigoQRViewSet(viewsets.ModelViewSet):
     queryset = CodigoQR.objects.all()
@@ -146,17 +130,9 @@ class NotificacionViewSet(viewsets.ModelViewSet):
     queryset = Notificacion.objects.all()
     serializer_class = NotificacionSerializer
 
-class NotificacionTraduccionViewSet(viewsets.ModelViewSet):
-    queryset = NotificacionTraduccion.objects.all()
-    serializer_class = NotificacionTraduccionSerializer
-
 class MultimediaRedSocialViewSet(viewsets.ModelViewSet):
     queryset = MultimediaRedSocial.objects.all()
     serializer_class = MultimediaRedSocialSerializer
-
-class PublicacionTraduccionViewSet(viewsets.ModelViewSet):
-    queryset = PublicacionTraduccion.objects.all()
-    serializer_class = PublicacionTraduccionSerializer
 
 class PreferenciaViewSet(viewsets.ModelViewSet):
     queryset = Preferencia.objects.all()

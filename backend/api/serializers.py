@@ -91,11 +91,6 @@ class ZonaSerializer(serializers.ModelSerializer):
         model = Zona
         fields = '__all__'
 
-class ZonaTraduccionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ZonaTraduccion
-        fields = '__all__'
-
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
@@ -116,29 +111,14 @@ class ExhibicionSerializer(serializers.ModelSerializer):
         model = Exhibicion
         fields = '__all__'
 
-class ExhibicionTraduccionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ExhibicionTraduccion
-        fields = '__all__'
-
 class ObjetivoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Objetivo
         fields = '__all__'
 
-class ObjetivoTraduccionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ObjetivoTraduccion
-        fields = '__all__'
-
 class PaginaExhibicionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaginaExhibicion
-        fields = '__all__'
-
-class PaginaExhibicionTraduccionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PaginaExhibicionTraduccion
         fields = '__all__'
 
 class CodigoQRSerializer(serializers.ModelSerializer):
@@ -186,11 +166,6 @@ class NotificacionSerializer(serializers.ModelSerializer):
         model = Notificacion
         fields = '__all__'
 
-class NotificacionTraduccionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NotificacionTraduccion
-        fields = '__all__'
-
 class LoginSerializer(serializers.Serializer):
     correo = serializers.EmailField()
     password = serializers.CharField(write_only=True)
@@ -198,11 +173,6 @@ class LoginSerializer(serializers.Serializer):
 class MultimediaRedSocialSerializer(serializers.ModelSerializer):
     class Meta:
         model = MultimediaRedSocial
-        fields = '__all__'
-
-class PublicacionTraduccionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PublicacionTraduccion
         fields = '__all__'
 
 class PreferenciaSerializer(serializers.ModelSerializer):
