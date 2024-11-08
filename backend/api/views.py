@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -178,7 +179,18 @@ class LoginView(APIView):
 
             if check_password(password, usuario.password_hash):
                 return Response(
-                    {"detail": "Autenticación exitosa.", "id_usuario": str(usuario.id_usuario)},
+                    {"detail": "Autenticación exitosa.", 
+                     "id_usuario": str(usuario.id_usuario),
+                     "nombre": usuario.nombre,
+                     "apellido": usuario.apellido,
+                     "correo": usuario.correo,
+                     "fecha_nacimiento": usuario.fecha_nacimiento,
+                     "fecha_registro": usuario.fecha_registro,
+                     "foto_perfil": usuario.foto_perfil.url if usuario.foto_perfil else None,
+                     "rol": usuario.rol.nombre_rol if usuario.rol else None,
+                     "idioma": usuario.idioma.codigo_idioma if usuario.idioma else None,
+                     "tema": usuario.tema.nombre_tema if usuario.tema else None,
+                    },
                     status=status.HTTP_200_OK
                 )
             else:
@@ -188,3 +200,14 @@ class LoginView(APIView):
                 )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class CodigoAccesoView(APIView):
+    def get(self, request):
+        try:
+            configuracion = ConfiguracionGeneral.objects.first()
+            if configuracion:
+                return Response({"codigo_acceso": configuracion.codigo_acceso}, status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": "Configuración general no encontrada."}, status=status.HTTP_404_NOT_FOUND)
+        except ConfiguracionGeneral.DoesNotExist:
+            return Response({"detail": "Configuración general no encontrada."}, status=status.HTTP_404_NOT_FOUND)

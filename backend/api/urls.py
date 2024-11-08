@@ -43,4 +43,5 @@ router.register(r'preferencias', PreferenciaViewSet)
 # Exportar las rutas
 urlpatterns = router.urls + [
     path('login/', LoginView.as_view(), name='login'),
+    path('codigo-acceso/', CodigoAccesoView.as_view(), name='codigo-acceso'),
 ]

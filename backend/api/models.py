@@ -99,8 +99,11 @@ class ZonaTraduccion(models.Model):
 
 class Color(models.Model):
     nombre = models.CharField(max_length=50)
-    codigo = models.CharField(max_length=10)
+    red = models.PositiveIntegerField(default=0)
+    green = models.PositiveIntegerField(default=0)
+    blue = models.PositiveIntegerField(default=0)
     zona = models.ForeignKey(Zona, on_delete=models.CASCADE)
+    tema = models.ForeignKey(Tema, on_delete=models.CASCADE, blank=True, null=True)
 
 class TipoRecurso(models.Model):
     nombre_tipo = models.CharField(max_length=50)
