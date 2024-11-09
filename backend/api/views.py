@@ -179,3 +179,47 @@ class CodigoAccesoView(APIView):
                 return Response({"detail": "Configuración general no encontrada."}, status=status.HTTP_404_NOT_FOUND)
         except ConfiguracionGeneral.DoesNotExist:
             return Response({"detail": "Configuración general no encontrada."}, status=status.HTTP_404_NOT_FOUND)
+        
+class ZonaDetailView(APIView):
+    def get(self, request, name):
+        zona = get_object_or_404(Zona, nombre=name)
+        
+        num_exhibiciones = Exhibicion.objects.filter(zona=zona).count()
+        
+        multimedia = MultimediaZona.objects.filter(zona=zona).values_list('url_recurso', flat=True)
+        
+        data = {
+            "id": zona.id,
+            "nombre": zona.nombre,
+            "numero_exhibiciones": num_exhibiciones,
+            "logo": zona.logo,
+            "mensaje_es": zona.mensaje_es,
+            "mensaje_en": zona.mensaje_en,
+            "descripcion_es": zona.descripcion_es,
+            "descripcion_en": zona.descripcion_en,
+            "multimedia": list(multimedia)
+        }
+        
+        return Response(data, status=status.HTTP_200_OK)
+    
+class ExhibicionDetailView(APIView):
+    def get(self, request, name):
+        exhibicion = get_object_or_404(Exhibicion, nombre=name)
+        
+        objetivos = Objetivo.objects.filter(exhibicion=exhibicion).values('descripcion_es', 'descripcion_en')
+        
+        data = {
+            "id": exhibicion.id,
+            "nombre": exhibicion.nombre,
+            "zona": exhibicion.zona.nombre,
+            "img": exhibicion.img,
+            "piso": exhibicion.piso,
+            "disponibilidad": exhibicion.disponibilidad,
+            "latitud": exhibicion.latitud,
+            "longitud": exhibicion.longitud,
+            "mensaje_es": exhibicion.mensaje_es,
+            "mensaje_en": exhibicion.mensaje_en,
+            "objetivos": list(objetivos),
+        }
+        
+        return Response(data, status=status.HTTP_200_OK)
