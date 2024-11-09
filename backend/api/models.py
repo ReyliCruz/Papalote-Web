@@ -1,12 +1,13 @@
 import uuid
 from django.db import models
+from .fields import CloudinaryImageField
 
 # Create your models here.
 
 # Configuración general del museo
 class ConfiguracionGeneral(models.Model):
     nombre_museo = models.CharField(max_length=100)
-    logo = models.ImageField(upload_to='logos/')
+    logo = CloudinaryImageField(folder="logos")
     sede = models.CharField(max_length=100)
     latitud = models.DecimalField(max_digits=30, decimal_places=20)
     longitud = models.DecimalField(max_digits=30, decimal_places=20)
@@ -36,7 +37,7 @@ class Usuario(models.Model):
     password_hash = models.CharField(max_length=128)
     fecha_nacimiento = models.DateField()
     fecha_registro = models.DateTimeField(auto_now_add=True)
-    foto_perfil = models.ImageField(upload_to='usuarios/', blank=True, null=True)
+    foto_perfil = CloudinaryImageField(folder="usuarios")
     rol = models.ForeignKey(Rol, on_delete=models.CASCADE, blank=True, null=True)
     idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE, blank=True, null=True)
     tema = models.ForeignKey(Tema, on_delete=models.CASCADE, blank=True, null=True)
@@ -57,12 +58,12 @@ class TipoRecompensa(models.Model):
 
 class Recompensa(models.Model):
     nombre = models.CharField(max_length=50)
-    img = models.ImageField(upload_to='recompensas/')
+    img = CloudinaryImageField(folder="recompensas")
     tipo_recompensa = models.ForeignKey(TipoRecompensa, on_delete=models.CASCADE)
 
 class Desafio(models.Model):
     nombre = models.CharField(max_length=50)
-    img = models.ImageField(upload_to='desafios/')
+    img = CloudinaryImageField(folder="desafios")
     valor_meta = models.IntegerField(blank=True, null=True)
     descripcion_es = models.TextField(blank=True, null=True)
     descripcion_en = models.TextField(blank=True, null=True)
@@ -81,7 +82,7 @@ class UsuarioProgresoDesafio(models.Model):
     completado = models.BooleanField(default=False)
 
 class Zona(models.Model):
-    logo = models.ImageField(upload_to='zonas/')
+    logo = CloudinaryImageField(folder="zonas")
     nombre = models.CharField(max_length=100)
     mensaje_es = models.TextField(blank=True, null=True)
     mensaje_en = models.TextField(blank=True, null=True)
@@ -109,7 +110,7 @@ class Exhibicion(models.Model):
     longitud = models.DecimalField(max_digits=30, decimal_places=20, blank=True, null=True)
     piso = models.IntegerField()
     disponibilidad = models.BooleanField(default=True)
-    img = models.ImageField(upload_to='exhibiciones/', blank=True, null=True)
+    img = CloudinaryImageField(folder="exhibiciones")
     zona = models.ForeignKey(Zona, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100)
     mensaje_es = models.TextField(blank=True, null=True)
@@ -121,7 +122,7 @@ class Objetivo(models.Model):
     descripcion_en = models.TextField(blank=True, null=True)
 
 class PaginaExhibicion(models.Model):
-    img = models.ImageField(upload_to='paginas/')
+    img = CloudinaryImageField(folder="paginas")
     exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
     titulo_es = models.CharField(max_length=100, blank=True, null=True)
     titulo_en = models.CharField(max_length=100, blank=True, null=True)
@@ -129,7 +130,7 @@ class PaginaExhibicion(models.Model):
     contenido_en = models.TextField(blank=True, null=True)
 
 class CodigoQR(models.Model):
-    codigo = models.ImageField(upload_to='qrcodes/', blank=True, null=True)
+    codigo = CloudinaryImageField(folder="qrcodes")
     fecha_creacion = models.DateTimeField()
     fecha_vencimiento = models.DateTimeField(blank=True, null=True)
     exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
@@ -154,10 +155,10 @@ class Opinion(models.Model):
 
 class Emoji(models.Model):
     nombre = models.CharField(max_length=50)
-    img = models.ImageField(upload_to='emojis/')
+    img = CloudinaryImageField(folder="emojis")
 
 class MultimediaRedSocial(models.Model):
-    url_recurso = models.ImageField(upload_to='social/', blank=True, null=True)
+    url_recurso = CloudinaryImageField(folder="social")
     tipo_recurso = models.ForeignKey(TipoRecurso, on_delete=models.CASCADE)
 
 class Publicacion(models.Model):

@@ -3,9 +3,17 @@ from django.contrib.auth.hashers import make_password
 from .models import *
 
 class ConfiguracionGeneralSerializer(serializers.ModelSerializer):
+    logo = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = ConfiguracionGeneral
         fields = '__all__'
+
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['logo'] = instance.logo
+        return rep
 
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,6 +31,8 @@ class TemaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UsuarioSerializer(serializers.ModelSerializer):
+    foto_perfil = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = Usuario
         fields = '__all__'
@@ -31,15 +41,21 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'foto_perfil': {'required': False},
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.context['request'].method in ['PATCH', 'PUT']:
+            self.fields.pop('password_hash', None)
+
     def create(self, validated_data):
         if 'password_hash' in validated_data:
             validated_data['password_hash'] = make_password(validated_data['password_hash'])
         return super().create(validated_data)
     
-    def validate_correo(self, value):
-        if Usuario.objects.filter(correo=value).exists():
-            raise serializers.ValidationError("El usuario con este correo ya existe.")
-        return value
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['foto_perfil'] = instance.foto_perfil
+        return rep
 
 class VisitaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,14 +73,30 @@ class TipoRecompensaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class RecompensaSerializer(serializers.ModelSerializer):
+    img = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = Recompensa
         fields = '__all__'
 
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['img'] = instance.img
+        return rep
+
 class DesafioSerializer(serializers.ModelSerializer):
+    img = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = Desafio
         fields = '__all__'
+
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['img'] = instance.img
+        return rep
 
 class UsuarioRecompensaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -77,9 +109,17 @@ class UsuarioProgresoDesafioSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ZonaSerializer(serializers.ModelSerializer):
+    logo = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = Zona
         fields = '__all__'
+
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['logo'] = instance.logo
+        return rep
 
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -97,9 +137,17 @@ class MultimediaZonaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ExhibicionSerializer(serializers.ModelSerializer):
+    img = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = Exhibicion
         fields = '__all__'
+
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['img'] = instance.img
+        return rep
 
 class ObjetivoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -107,14 +155,30 @@ class ObjetivoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PaginaExhibicionSerializer(serializers.ModelSerializer):
+    img = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = PaginaExhibicion
         fields = '__all__'
 
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['img'] = instance.img
+        return rep
+
 class CodigoQRSerializer(serializers.ModelSerializer):
+    codigo = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = CodigoQR
         fields = '__all__'
+
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['codigo'] = instance.codigo
+        return rep
 
 class EscaneoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -132,9 +196,17 @@ class OpinionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EmojiSerializer(serializers.ModelSerializer):
+    img = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = Emoji
         fields = '__all__'
+
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['img'] = instance.img
+        return rep
 
 class PublicacionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -161,9 +233,17 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
 class MultimediaRedSocialSerializer(serializers.ModelSerializer):
+    url_recurso = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = MultimediaRedSocial
         fields = '__all__'
+
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['url_recurso'] = instance.url_recurso
+        return rep
 
 class PreferenciaSerializer(serializers.ModelSerializer):
     class Meta:
