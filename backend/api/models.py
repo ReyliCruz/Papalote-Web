@@ -49,8 +49,8 @@ class Visita(models.Model):
     opinion_experiencia = models.TextField(blank=True, null=True)
 
 class DialogoPersonaje(models.Model):
-    mensaje = models.TextField()
-    idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE)
+    mensaje_es = models.TextField(blank=True, null=True)
+    mensaje_en = models.TextField(blank=True, null=True)
     pregunta_quiz = models.BooleanField(default=False)
 
 class TipoRecompensa(models.Model):
