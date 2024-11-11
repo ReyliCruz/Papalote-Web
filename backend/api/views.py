@@ -154,7 +154,7 @@ class LoginView(APIView):
                      "correo": usuario.correo,
                      "fecha_nacimiento": usuario.fecha_nacimiento,
                      "fecha_registro": usuario.fecha_registro,
-                     "foto_perfil": usuario.foto_perfil.url if usuario.foto_perfil else None,
+                     "foto_perfil": usuario.foto_perfil if usuario.foto_perfil else None,
                      "rol": usuario.rol.nombre_rol if usuario.rol else None,
                      "idioma": usuario.idioma.codigo_idioma if usuario.idioma else None,
                      "tema": usuario.tema.nombre_tema if usuario.tema else None,
@@ -223,3 +223,27 @@ class ExhibicionDetailView(APIView):
         }
         
         return Response(data, status=status.HTTP_200_OK)
+
+class ExhibitionsByZoneView(APIView):
+    def get(self, request):
+        zonas = Zona.objects.all()
+        
+        zones_data = []
+        for zona in zonas:
+            exhibiciones = Exhibicion.objects.filter(zona=zona)
+            sub_items = [{"id": exhibicion.id, "name": exhibicion.nombre} for exhibicion in exhibiciones]
+
+            primary_color = Color.objects.filter(zona=zona, nombre='PrimaryColor').first()
+            color = f"rgb({primary_color.red}, {primary_color.green}, {primary_color.blue})" if primary_color else None
+            
+            zone_data = {
+                "id": zona.id,
+                "text": zona.nombre,
+                "color": color,
+                "image": zona.logo if zona.logo else None,
+                "subItems": sub_items
+            }
+            
+            zones_data.append(zone_data)
+        
+        return Response(zones_data)
