@@ -186,7 +186,7 @@ class ZonaDetailView(APIView):
         
         num_exhibiciones = Exhibicion.objects.filter(zona=zona).count()
         
-        multimedia = MultimediaZona.objects.filter(zona=zona).values_list('url_recurso', flat=True)
+        multimedia = MultimediaZona.objects.filter(zona=zona).values_list('img', flat=True)
         
         data = {
             "id": zona.id,

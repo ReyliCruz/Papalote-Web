@@ -101,7 +101,7 @@ class TipoRecurso(models.Model):
     nombre_tipo = models.CharField(max_length=50)
 
 class MultimediaZona(models.Model):
-    url_recurso = models.URLField()
+    img = CloudinaryImageField(folder="multimedia-zonas")
     tipo_recurso = models.ForeignKey(TipoRecurso, on_delete=models.CASCADE)
     zona = models.ForeignKey(Zona, on_delete=models.CASCADE)
 

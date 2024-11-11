@@ -132,9 +132,17 @@ class TipoRecursoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MultimediaZonaSerializer(serializers.ModelSerializer):
+    img = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = MultimediaZona
         fields = '__all__'
+
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['img'] = instance.img
+        return rep
 
 class ExhibicionSerializer(serializers.ModelSerializer):
     img = serializers.ImageField(required=False, allow_null=True)
