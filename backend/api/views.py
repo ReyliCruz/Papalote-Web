@@ -122,10 +122,6 @@ class NotificacionViewSet(viewsets.ModelViewSet):
     queryset = Notificacion.objects.all()
     serializer_class = NotificacionSerializer
 
-class MultimediaRedSocialViewSet(viewsets.ModelViewSet):
-    queryset = MultimediaRedSocial.objects.all()
-    serializer_class = MultimediaRedSocialSerializer
-
 class PreferenciaViewSet(viewsets.ModelViewSet):
     queryset = Preferencia.objects.all()
     serializer_class = PreferenciaSerializer

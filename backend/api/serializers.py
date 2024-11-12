@@ -217,9 +217,17 @@ class EmojiSerializer(serializers.ModelSerializer):
         return rep
 
 class PublicacionSerializer(serializers.ModelSerializer):
+    img = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = Publicacion
         fields = '__all__'
+
+    def to_representation(self, instance):
+        """Override to return only the Cloudinary URL."""
+        rep = super().to_representation(instance)
+        rep['img'] = instance.img
+        return rep
 
 class ReaccionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -239,19 +247,6 @@ class NotificacionSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     correo = serializers.EmailField()
     password = serializers.CharField(write_only=True)
-
-class MultimediaRedSocialSerializer(serializers.ModelSerializer):
-    url_recurso = serializers.ImageField(required=False, allow_null=True)
-
-    class Meta:
-        model = MultimediaRedSocial
-        fields = '__all__'
-
-    def to_representation(self, instance):
-        """Override to return only the Cloudinary URL."""
-        rep = super().to_representation(instance)
-        rep['url_recurso'] = instance.url_recurso
-        return rep
 
 class PreferenciaSerializer(serializers.ModelSerializer):
     class Meta:

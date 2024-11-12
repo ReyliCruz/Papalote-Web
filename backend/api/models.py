@@ -157,15 +157,12 @@ class Emoji(models.Model):
     nombre = models.CharField(max_length=50)
     img = CloudinaryImageField(folder="emojis")
 
-class MultimediaRedSocial(models.Model):
-    url_recurso = CloudinaryImageField(folder="social")
-    tipo_recurso = models.ForeignKey(TipoRecurso, on_delete=models.CASCADE)
-
 class Publicacion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    multimedia = models.ForeignKey(MultimediaRedSocial, on_delete=models.CASCADE)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     descripcion = models.TextField(blank=True, null=True)
+    img = CloudinaryImageField(folder="social", blank=True, null=True)
+    exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE, blank=True, null=True)
 
 class Reaccion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
@@ -179,7 +176,7 @@ class Favorito(models.Model):
     fecha_guardado = models.DateTimeField()
 
 class Notificacion(models.Model):
-    fecha_creacion = models.DateTimeField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
     titulo_es = models.CharField(max_length=100, blank=True, null=True)
     titulo_en = models.CharField(max_length=100, blank=True, null=True)
     descripcion_es = models.TextField(blank=True, null=True)
