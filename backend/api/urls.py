@@ -41,4 +41,5 @@ urlpatterns = router.urls + [
     path('zona/<str:name>/', ZonaDetailView.as_view(), name='zona-detail'),
     path('exhibicion/<str:name>/', ExhibicionDetailView.as_view(), name='exhibicion-detail'),
     path('exhibitions-by-zone/', ExhibitionsByZoneView.as_view(), name='exhibitions-by-zone'),
+    path('paginas/<str:nombre_exhibicion>/', PaginasExhibicionView.as_view(), name='paginas-exhibicion')
 ]

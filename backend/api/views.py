@@ -243,3 +243,13 @@ class ExhibitionsByZoneView(APIView):
             zones_data.append(zone_data)
         
         return Response(zones_data)
+    
+class PaginasExhibicionView(APIView):
+    def get(self, request, nombre_exhibicion):
+        exhibicion = get_object_or_404(Exhibicion, nombre=nombre_exhibicion)
+        
+        paginas = PaginaExhibicion.objects.filter(exhibicion=exhibicion)
+        
+        serializer = PaginaExhibicionSerializer(paginas, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
