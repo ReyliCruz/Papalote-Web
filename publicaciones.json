@@ -1,0 +1,67 @@
+[
+    {
+      "id_publicacion": 1,
+      "id_usuario": 101,
+      "nombre_usuario": "Reyli Cruz",
+      "foto_perfil": "https://via.placeholder.com/150",
+      "descripcion": "Comentario sobre la experiencia de la visita al museo!!! 100/100",
+      "foto_publicacion": "public/images/dino_prueba.jpg",
+      "nombre_exhibicion": "Dinosaurios",
+      "status": "pendiente"
+    },
+    {
+      "id_publicacion": 2,
+      "id_usuario": 102,
+      "nombre_usuario": "Ana López",
+      "foto_perfil": "https://via.placeholder.com/150",
+      "descripcion": "Increíble exhibición, ¡muy recomendable!",
+      "foto_publicacion": "public/images/foto_exhibicion.png",
+      "nombre_exhibicion": "Arte Moderno",
+      "status": "pendiente"
+    },
+    {
+      "id_publicacion": 3,
+      "id_usuario": 102,
+      "nombre_usuario": "Ramon Juarez",
+      "foto_perfil": "https://via.placeholder.com/150",
+      "descripcion": "Increíble exhibición, ¡muy recomendable!, debemos de venir ogtra vez si hace falta",
+      "foto_publicacion": "public/images/foto_exhibicion.png",
+      "nombre_exhibicion": "Arenero",
+      "status": "pendiente"
+    },
+    {
+      "id_publicacion": 4,
+      "id_usuario": 102,
+      "nombre_usuario": "Ramon Juarez",
+      "foto_perfil": "public/images/foto_exhibicion.png",
+      "descripcion": "Increíble exhibición, ¡muy recomendable!, debemos de venir ogtra vez si hace falta",
+      "foto_publicacion": "public/images/foto_exhibicion.png",
+      "nombre_exhibicion": "Arenero",
+      "status": "pendiente"
+    },
+
+    {
+      "id_publicacion": 5,
+      "id_usuario": 102,
+      "nombre_usuario": "Ramon Juarez",
+      "foto_perfil": "https://via.placeholder.com/150",
+      "descripcion": "Increíble exhibición, ¡muy recomendable!, debemos de venir ogtra vez si hace falta",
+      "foto_publicacion": "public/images/dino_prueba.jpg",
+      "nombre_exhibicion": "Arenero",
+      "status": "pendiente"
+    },
+    {
+      "id_publicacion": 6,
+      "id_usuario": 102,
+      "nombre_usuario": "Ana López",
+      "foto_perfil": "https://via.placeholder.com/150",
+      "descripcion": "Increíble exhibición, ¡muy recomendable!",
+      "foto_publicacion": "public/images/foto_exhibicion.png",
+      "nombre_exhibicion": "Arte Moderno",
+      "status": "pendiente"
+    }
+
+
+  ]
+  
+  
