@@ -1,0 +1,91 @@
+/* Contenedor principal con flexbox */
+.notifications-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  /* Estilos del formulario */
+  .formulario {
+    width: 50%; /* Toma el 60% del ancho */
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .formulario h1 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .formulario input,
+  .formulario textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .formulario button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .formulario button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Sección de notificaciones */
+  .notificaciones-actuales {
+    width: 35%; /* Toma el 35% del ancho */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: 500px;
+  }
+  
+  .notificaciones-actuales h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .notificacion-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .icono-megafono {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+  
+  .boton-eliminar {
+    margin-left: auto;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .boton-eliminar:hover {
+    background-color: #c0392b;
+  }
+  
