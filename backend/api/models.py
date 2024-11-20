@@ -53,33 +53,21 @@ class DialogoPersonaje(models.Model):
     mensaje_en = models.TextField(blank=True, null=True)
     pregunta_quiz = models.BooleanField(default=False)
 
-class TipoRecompensa(models.Model):
-    nombre_tipo = models.CharField(max_length=50)
-
-class Recompensa(models.Model):
-    nombre = models.CharField(max_length=50)
-    img = CloudinaryImageField(folder="recompensas")
-    tipo_recompensa = models.ForeignKey(TipoRecompensa, on_delete=models.CASCADE)
-
 class Desafio(models.Model):
-    nombre = models.CharField(max_length=50)
-    img = CloudinaryImageField(folder="desafios")
+    nombre_desafio = models.CharField(max_length=50)
+    img_desafio = CloudinaryImageField(folder="desafios")
     valor_meta = models.IntegerField(blank=True, null=True)
     descripcion_es = models.TextField(blank=True, null=True)
     descripcion_en = models.TextField(blank=True, null=True)
-    recompensa = models.ForeignKey(Recompensa, on_delete=models.CASCADE, blank=True, null=True)
-
-class UsuarioRecompensa(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    recompensa = models.ForeignKey(Recompensa, on_delete=models.CASCADE)
-    fecha_obtencion = models.DateTimeField()
-    equipado = models.BooleanField(default=False)
+    nombre_recompensa = models.CharField(max_length=50, blank=True, null=True)
+    img_recompensa = CloudinaryImageField(folder="recompensas")
+    tipo_recompensa = models.CharField(max_length=50, blank=True, null=True)
 
 class UsuarioProgresoDesafio(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     desafio = models.ForeignKey(Desafio, on_delete=models.CASCADE)
     progreso_actual = models.IntegerField(default=0)
-    completado = models.BooleanField(default=False)
+    fecha_completado = models.DateTimeField(blank=True, null=True)
 
 class Zona(models.Model):
     logo = CloudinaryImageField(folder="zonas")

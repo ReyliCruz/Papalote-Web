@@ -67,26 +67,9 @@ class DialogoPersonajeSerializer(serializers.ModelSerializer):
         model = DialogoPersonaje
         fields = '__all__'
 
-class TipoRecompensaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TipoRecompensa
-        fields = '__all__'
-
-class RecompensaSerializer(serializers.ModelSerializer):
-    img = serializers.ImageField(required=False, allow_null=True)
-
-    class Meta:
-        model = Recompensa
-        fields = '__all__'
-
-    def to_representation(self, instance):
-        """Override to return only the Cloudinary URL."""
-        rep = super().to_representation(instance)
-        rep['img'] = instance.img
-        return rep
-
 class DesafioSerializer(serializers.ModelSerializer):
-    img = serializers.ImageField(required=False, allow_null=True)
+    img_desafio = serializers.ImageField(required=False, allow_null=True)
+    img_recompensa = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = Desafio
@@ -95,13 +78,9 @@ class DesafioSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         """Override to return only the Cloudinary URL."""
         rep = super().to_representation(instance)
-        rep['img'] = instance.img
+        rep['img_desafio'] = instance.img_desafio if instance.img_desafio else None
+        rep['img_recompensa'] = instance.img_recompensa if instance.img_recompensa else None
         return rep
-
-class UsuarioRecompensaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UsuarioRecompensa
-        fields = '__all__'
 
 class UsuarioProgresoDesafioSerializer(serializers.ModelSerializer):
     class Meta:

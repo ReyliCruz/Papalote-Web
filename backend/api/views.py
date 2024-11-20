@@ -38,21 +38,9 @@ class DialogoPersonajeViewSet(viewsets.ModelViewSet):
     queryset = DialogoPersonaje.objects.all()
     serializer_class = DialogoPersonajeSerializer
 
-class TipoRecompensaViewSet(viewsets.ModelViewSet):
-    queryset = TipoRecompensa.objects.all()
-    serializer_class = TipoRecompensaSerializer
-
-class RecompensaViewSet(viewsets.ModelViewSet):
-    queryset = Recompensa.objects.all()
-    serializer_class = RecompensaSerializer
-
 class DesafioViewSet(viewsets.ModelViewSet):
     queryset = Desafio.objects.all()
     serializer_class = DesafioSerializer
-
-class UsuarioRecompensaViewSet(viewsets.ModelViewSet):
-    queryset = UsuarioRecompensa.objects.all()
-    serializer_class = UsuarioRecompensaSerializer
 
 class UsuarioProgresoDesafioViewSet(viewsets.ModelViewSet):
     queryset = UsuarioProgresoDesafio.objects.all()
