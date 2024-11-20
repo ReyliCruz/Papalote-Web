@@ -42,4 +42,6 @@ urlpatterns = router.urls + [
     path('desafios-usuario/<uuid:usuario_id>/', DesafiosUsuarioView.as_view(), name='desafios-usuario'),
     path('insignias/<uuid:usuario_id>/', InsigniasView.as_view(), name='insignias-usuario'),
     path('tarjetas/<uuid:usuario_id>/', TarjetasView.as_view(), name='tarjetas-usuario'),
+    path('publicaciones-aceptadas/', PublicacionesAceptadasView.as_view(), name='publicaciones-aceptadas'),
+    path('publicaciones-admin/', PublicacionesAdminView.as_view(), name='publicaciones-admin'),
 ]

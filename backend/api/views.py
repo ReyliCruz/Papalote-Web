@@ -309,3 +309,46 @@ class TarjetasView(APIView):
             tarjetas_data.append(tarjeta_data)
 
         return Response(tarjetas_data, status=status.HTTP_200_OK)
+
+class PublicacionesAceptadasView(APIView):
+    def get(self, request):
+        publicaciones = Publicacion.objects.filter(aceptado=True)
+        
+        data = []
+        for publicacion in publicaciones:
+            usuario = publicacion.usuario
+            data.append({
+                "id": publicacion.id,
+                "id_usuario": str(usuario.id_usuario),
+                "nombre": usuario.nombre,
+                "foto_perfil": usuario.foto_perfil if usuario.foto_perfil else None,
+                "tarjeta": usuario.tarjeta.img_recompensa if usuario.tarjeta else None,
+                "insignia": usuario.insignia.img_recompensa if usuario.insignia else None,
+                "descripcion": publicacion.descripcion,
+                "img": publicacion.img if publicacion.img else None,
+                "id_exhibicion": publicacion.exhibicion.id if publicacion.exhibicion else None,
+                "nombre_exhibicion": publicacion.exhibicion.nombre if publicacion.exhibicion else None,
+            })
+        
+        return Response(data, status=status.HTTP_200_OK)
+    
+class PublicacionesAdminView(APIView):
+    def get(self, request):
+        publicaciones = Publicacion.objects.all()
+        
+        data = []
+        for publicacion in publicaciones:
+            usuario = publicacion.usuario
+            data.append({
+                "id": publicacion.id,
+                "id_usuario": str(usuario.id_usuario),
+                "nombre": usuario.nombre,
+                "foto_perfil": usuario.foto_perfil if usuario.foto_perfil else None,
+                "descripcion": publicacion.descripcion,
+                "img": publicacion.img if publicacion.img else None,
+                "id_exhibicion": publicacion.exhibicion.id if publicacion.exhibicion else None,
+                "nombre_exhibicion": publicacion.exhibicion.nombre if publicacion.exhibicion else None,
+                "aceptado": publicacion.aceptado
+            })
+        
+        return Response(data, status=status.HTTP_200_OK)
