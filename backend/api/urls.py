@@ -38,5 +38,8 @@ urlpatterns = router.urls + [
     path('zona/<str:name>/', ZonaDetailView.as_view(), name='zona-detail'),
     path('exhibicion/<str:name>/', ExhibicionDetailView.as_view(), name='exhibicion-detail'),
     path('exhibitions-by-zone/', ExhibitionsByZoneView.as_view(), name='exhibitions-by-zone'),
-    path('paginas/<str:nombre_exhibicion>/', PaginasExhibicionView.as_view(), name='paginas-exhibicion')
+    path('paginas/<str:nombre_exhibicion>/', PaginasExhibicionView.as_view(), name='paginas-exhibicion'),
+    path('desafios-usuario/<uuid:usuario_id>/', DesafiosUsuarioView.as_view(), name='desafios-usuario'),
+    path('insignias/<uuid:usuario_id>/', InsigniasView.as_view(), name='insignias-usuario'),
+    path('tarjetas/<uuid:usuario_id>/', TarjetasView.as_view(), name='tarjetas-usuario'),
 ]

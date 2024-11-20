@@ -241,3 +241,69 @@ class PaginasExhibicionView(APIView):
         serializer = PaginaExhibicionSerializer(paginas, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class DesafiosUsuarioView(APIView):
+    def get(self, request, usuario_id):
+        desafios = Desafio.objects.all()
+        
+        progreso_desafios = UsuarioProgresoDesafio.objects.filter(usuario_id=usuario_id)
+        progreso_dict = {progreso.desafio_id: progreso.progreso_actual for progreso in progreso_desafios}
+
+        desafios_data = []
+        for desafio in desafios:
+            desafio_data = {
+                "id": desafio.id,
+                "nombre_desafio": desafio.nombre_desafio,
+                "descripcion_es": desafio.descripcion_es,
+                "progreso_actual": progreso_dict.get(desafio.id, 0),
+                "valor_meta": desafio.valor_meta,
+                "img_desafio": desafio.img_desafio if desafio.img_desafio else None,
+            }
+            desafios_data.append(desafio_data)
+        
+        return Response(desafios_data)
+
+class InsigniasView(APIView):
+    def get(self, request, usuario_id):
+        usuario = get_object_or_404(Usuario, id_usuario=usuario_id)
+
+        desafios = Desafio.objects.filter(tipo_recompensa="Insignia")
+
+        insignias_data = []
+        for desafio in desafios:
+            progreso_usuario = UsuarioProgresoDesafio.objects.filter(
+                usuario=usuario, desafio=desafio
+            ).first()
+
+            insignia_data = {
+                "id": desafio.id,
+                "nombre_recompensa": desafio.nombre_recompensa,
+                "imagen": desafio.img_recompensa if desafio.img_recompensa else None,
+                "obtenido": bool(progreso_usuario and progreso_usuario.fecha_completado),
+            }
+            insignias_data.append(insignia_data)
+
+        return Response(insignias_data, status=status.HTTP_200_OK)
+
+
+class TarjetasView(APIView):
+    def get(self, request, usuario_id):
+        usuario = get_object_or_404(Usuario, id_usuario=usuario_id)
+
+        desafios = Desafio.objects.filter(tipo_recompensa="Tarjeta")
+
+        tarjetas_data = []
+        for desafio in desafios:
+            progreso_usuario = UsuarioProgresoDesafio.objects.filter(
+                usuario=usuario, desafio=desafio
+            ).first()
+
+            tarjeta_data = {
+                "id": desafio.id,
+                "nombre_recompensa": desafio.nombre_recompensa,
+                "imagen": desafio.img_recompensa if desafio.img_recompensa else None,
+                "obtenido": bool(progreso_usuario and progreso_usuario.fecha_completado),
+            }
+            tarjetas_data.append(tarjeta_data)
+
+        return Response(tarjetas_data, status=status.HTTP_200_OK)
