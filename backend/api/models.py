@@ -28,6 +28,17 @@ class Idioma(models.Model):
 class Tema(models.Model):
     nombre_tema = models.CharField(max_length=50)
 
+# Desafíos para obtener recompensas
+class Desafio(models.Model):
+    nombre_desafio = models.CharField(max_length=50)
+    img_desafio = CloudinaryImageField(folder="desafios")
+    valor_meta = models.IntegerField(blank=True, null=True)
+    descripcion_es = models.TextField(blank=True, null=True)
+    descripcion_en = models.TextField(blank=True, null=True)
+    nombre_recompensa = models.CharField(max_length=50, blank=True, null=True)
+    img_recompensa = CloudinaryImageField(folder="recompensas")
+    tipo_recompensa = models.CharField(max_length=50, blank=True, null=True)
+
 # Modelo de usuario con UUID como clave primaria
 class Usuario(models.Model):
     id_usuario = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -42,6 +53,30 @@ class Usuario(models.Model):
     idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE, blank=True, null=True)
     tema = models.ForeignKey(Tema, on_delete=models.CASCADE, blank=True, null=True)
 
+    # Relación con desafíos para tarjeta e insignia
+    tarjeta = models.ForeignKey(
+        Desafio,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="usuarios_tarjeta",
+        limit_choices_to={"tipo_recompensa": "Tarjeta"}  # Solo desafíos tipo "Tarjeta"
+    )
+    insignia = models.ForeignKey(
+        Desafio,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="usuarios_insignia",
+        limit_choices_to={"tipo_recompensa": "Insignia"}  # Solo desafíos tipo "Insignia"
+    )
+
+class UsuarioProgresoDesafio(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    desafio = models.ForeignKey(Desafio, on_delete=models.CASCADE)
+    progreso_actual = models.IntegerField(default=0)
+    fecha_completado = models.DateTimeField(blank=True, null=True)
+
 class Visita(models.Model):
     fecha_entrada = models.DateTimeField()
     fecha_salida = models.DateTimeField()
@@ -52,22 +87,6 @@ class DialogoPersonaje(models.Model):
     mensaje_es = models.TextField(blank=True, null=True)
     mensaje_en = models.TextField(blank=True, null=True)
     pregunta_quiz = models.BooleanField(default=False)
-
-class Desafio(models.Model):
-    nombre_desafio = models.CharField(max_length=50)
-    img_desafio = CloudinaryImageField(folder="desafios")
-    valor_meta = models.IntegerField(blank=True, null=True)
-    descripcion_es = models.TextField(blank=True, null=True)
-    descripcion_en = models.TextField(blank=True, null=True)
-    nombre_recompensa = models.CharField(max_length=50, blank=True, null=True)
-    img_recompensa = CloudinaryImageField(folder="recompensas")
-    tipo_recompensa = models.CharField(max_length=50, blank=True, null=True)
-
-class UsuarioProgresoDesafio(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    desafio = models.ForeignKey(Desafio, on_delete=models.CASCADE)
-    progreso_actual = models.IntegerField(default=0)
-    fecha_completado = models.DateTimeField(blank=True, null=True)
 
 class Zona(models.Model):
     logo = CloudinaryImageField(folder="zonas")
@@ -141,27 +160,34 @@ class Opinion(models.Model):
     descripcion = models.TextField(blank=True, null=True)
     fecha_opinion = models.DateTimeField()
 
+# Se dejará pendiente
 class Emoji(models.Model):
     nombre = models.CharField(max_length=50)
     img = CloudinaryImageField(folder="emojis")
+#####################
 
 class Publicacion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     descripcion = models.TextField(blank=True, null=True)
     img = CloudinaryImageField(folder="social", blank=True, null=True)
+    aceptado = models.BooleanField(default=False)
     exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE, blank=True, null=True)
 
+# Se dejará pendiente
 class Reaccion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
     emoji = models.ForeignKey(Emoji, on_delete=models.CASCADE)
     fecha_reaccion = models.DateTimeField()
+#####################
 
+# Se dejará pendiente
 class Favorito(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
     fecha_guardado = models.DateTimeField()
+#####################
 
 class Notificacion(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)

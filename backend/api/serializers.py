@@ -197,10 +197,30 @@ class EmojiSerializer(serializers.ModelSerializer):
 
 class PublicacionSerializer(serializers.ModelSerializer):
     img = serializers.ImageField(required=False, allow_null=True)
+    descripcion = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
         model = Publicacion
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.context['request'].method == 'POST':
+            self.fields.pop('aceptado', None)
+
+    def create(self, validated_data):
+        validated_data['aceptado'] = False
+        return super().create(validated_data)
+    
+    def validate(self, data):
+        """
+        Validar que al menos 'descripcion' o 'img' estén presentes.
+        """
+        if not data.get('descripcion') and not data.get('img'):
+            raise serializers.ValidationError(
+                "Debe proporcionar al menos una descripción o una imagen."
+            )
+        return data
 
     def to_representation(self, instance):
         """Override to return only the Cloudinary URL."""
