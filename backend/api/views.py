@@ -142,6 +142,8 @@ class LoginView(APIView):
                      "rol": usuario.rol.nombre_rol if usuario.rol else None,
                      "idioma": usuario.idioma.codigo_idioma if usuario.idioma else None,
                      "tema": usuario.tema.nombre_tema if usuario.tema else None,
+                     "tarjeta": usuario.tarjeta.img_recompensa if usuario.tarjeta else None,
+                     "insignia": usuario.insignia.img_recompensa if usuario.insignia else None,
                     },
                     status=status.HTTP_200_OK
                 )
