@@ -43,4 +43,5 @@ urlpatterns = router.urls + [
     path('tarjetas/<uuid:usuario_id>/', TarjetasView.as_view(), name='tarjetas-usuario'),
     path('publicaciones-aceptadas/', PublicacionesAceptadasView.as_view(), name='publicaciones-aceptadas'),
     path('publicaciones-admin/', PublicacionesAdminView.as_view(), name='publicaciones-admin'),
+    path('generar-qr/<str:nombre_exhibicion>/', GenerarCodigoQRView.as_view(), name='generar-qr'),
 ]

@@ -7,6 +7,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from io import BytesIO
+import qrcode
 
 # Create your views here.
 
@@ -348,3 +351,28 @@ class PublicacionesAdminView(APIView):
             })
         
         return Response(data, status=status.HTTP_200_OK)
+    
+class GenerarCodigoQRView(APIView):
+    def get(self, request, nombre_exhibicion):
+        exhibicion = get_object_or_404(Exhibicion, nombre=nombre_exhibicion)
+        
+        qr_content = f"AppAlote://{exhibicion.nombre}"
+        
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(qr_content)
+        qr.make(fit=True)
+        
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        buffer.seek(0)
+
+        response = HttpResponse(buffer, content_type="image/png")
+        response['Content-Disposition'] = f'attachment; filename={exhibicion.nombre}_qr.png'
+        return response
