@@ -154,19 +154,6 @@ class PaginaExhibicionSerializer(serializers.ModelSerializer):
         rep['img'] = instance.img
         return rep
 
-class CodigoQRSerializer(serializers.ModelSerializer):
-    codigo = serializers.ImageField(required=False, allow_null=True)
-
-    class Meta:
-        model = CodigoQR
-        fields = '__all__'
-
-    def to_representation(self, instance):
-        """Override to return only the Cloudinary URL."""
-        rep = super().to_representation(instance)
-        rep['codigo'] = instance.codigo
-        return rep
-
 class EscaneoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Escaneo

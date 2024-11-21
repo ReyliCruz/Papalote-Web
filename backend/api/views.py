@@ -74,10 +74,6 @@ class PaginaExhibicionViewSet(viewsets.ModelViewSet):
     queryset = PaginaExhibicion.objects.all()
     serializer_class = PaginaExhibicionSerializer
 
-class CodigoQRViewSet(viewsets.ModelViewSet):
-    queryset = CodigoQR.objects.all()
-    serializer_class = CodigoQRSerializer
-
 class EscaneoViewSet(viewsets.ModelViewSet):
     queryset = Escaneo.objects.all()
     serializer_class = EscaneoSerializer

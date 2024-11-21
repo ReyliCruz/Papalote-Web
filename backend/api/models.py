@@ -77,11 +77,13 @@ class UsuarioProgresoDesafio(models.Model):
     progreso_actual = models.IntegerField(default=0)
     fecha_completado = models.DateTimeField(blank=True, null=True)
 
+# Se dejará pendiente
 class Visita(models.Model):
     fecha_entrada = models.DateTimeField()
     fecha_salida = models.DateTimeField()
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     opinion_experiencia = models.TextField(blank=True, null=True)
+#####################
 
 class DialogoPersonaje(models.Model):
     mensaje_es = models.TextField(blank=True, null=True)
@@ -136,29 +138,25 @@ class PaginaExhibicion(models.Model):
     contenido_es = models.TextField(blank=True, null=True)
     contenido_en = models.TextField(blank=True, null=True)
 
-class CodigoQR(models.Model):
-    codigo = CloudinaryImageField(folder="qrcodes")
-    fecha_creacion = models.DateTimeField()
-    fecha_vencimiento = models.DateTimeField(blank=True, null=True)
-    exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
-
 class Escaneo(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    codigo_qr = models.ForeignKey(CodigoQR, on_delete=models.CASCADE)
-    fecha_escaneo = models.DateTimeField()
+    exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE, blank=True, null=True)
+    fecha_escaneo = models.DateTimeField(auto_now_add=True)
 
+# Se dejará pendiente
 class Interaccion(models.Model):
     fecha_inicio = models.DateTimeField()
     fecha_finalizacion = models.DateTimeField()
     exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
     visita = models.ForeignKey(Visita, on_delete=models.CASCADE)
+#####################
 
 class Opinion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
     calificacion = models.IntegerField(blank=True, null=True)
     descripcion = models.TextField(blank=True, null=True)
-    fecha_opinion = models.DateTimeField()
+    fecha_opinion = models.DateTimeField(auto_now_add=True)
 
 # Se dejará pendiente
 class Emoji(models.Model):
