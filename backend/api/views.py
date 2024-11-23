@@ -257,24 +257,40 @@ class PaginasExhibicionView(APIView):
 
 class DesafiosUsuarioView(APIView):
     def get(self, request, usuario_id):
+        usuario = get_object_or_404(Usuario, id_usuario=usuario_id)
         desafios = Desafio.objects.all()
-        
-        progreso_desafios = UsuarioProgresoDesafio.objects.filter(usuario_id=usuario_id)
-        progreso_dict = {progreso.desafio_id: progreso.progreso_actual for progreso in progreso_desafios}
 
         desafios_data = []
         for desafio in desafios:
+            progreso = self.calcular_progreso(usuario, desafio)
             desafio_data = {
                 "id": desafio.id,
                 "nombre_desafio": desafio.nombre_desafio,
                 "descripcion_es": desafio.descripcion_es,
-                "progreso_actual": progreso_dict.get(desafio.id, 0),
+                "progreso_actual": progreso,
                 "valor_meta": desafio.valor_meta,
                 "img_desafio": desafio.img_desafio if desafio.img_desafio else None,
             }
             desafios_data.append(desafio_data)
-        
+
         return Response(desafios_data)
+
+    def calcular_progreso(self, usuario, desafio):
+        if desafio.tipo_desafio == "Escanear":
+            if desafio.zona:
+                return Escaneo.objects.filter(usuario=usuario, exhibicion__zona=desafio.zona).values("exhibicion").distinct().count()
+            elif desafio.exhibicion:
+                return Escaneo.objects.filter(usuario=usuario, exhibicion=desafio.exhibicion).count()
+            else:
+                return Escaneo.objects.filter(usuario=usuario).values("exhibicion").distinct().count()
+
+        elif desafio.tipo_desafio == "Publicacion":
+            return Publicacion.objects.filter(usuario=usuario, exhibicion__isnull=False).count()
+
+        elif desafio.tipo_desafio == "Opinion":
+            return Opinion.objects.filter(usuario=usuario).values("exhibicion").distinct().count()
+
+        return 0
 
 class InsigniasView(APIView):
     def get(self, request, usuario_id):
@@ -297,7 +313,6 @@ class InsigniasView(APIView):
             insignias_data.append(insignia_data)
 
         return Response(insignias_data, status=status.HTTP_200_OK)
-
 
 class TarjetasView(APIView):
     def get(self, request, usuario_id):

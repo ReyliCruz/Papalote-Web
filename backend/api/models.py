@@ -16,50 +16,19 @@ class ConfiguracionGeneral(models.Model):
 
 class Rol(models.Model):
     nombre_rol = models.CharField(max_length=50)
+    def __str__(self):
+        return self.nombre_rol
 
 class Idioma(models.Model):
     codigo_idioma = models.CharField(max_length=10, unique=True)
     nombre_idioma = models.CharField(max_length=50)
+    def __str__(self):
+        return self.nombre_idioma
 
 class Tema(models.Model):
     nombre_tema = models.CharField(max_length=50)
-
-class Desafio(models.Model):
-    nombre_desafio = models.CharField(max_length=50)
-    img_desafio = CloudinaryImageField(folder="desafios")
-    valor_meta = models.IntegerField(blank=True, null=True)
-    descripcion_es = models.TextField(blank=True, null=True)
-    descripcion_en = models.TextField(blank=True, null=True)
-    nombre_recompensa = models.CharField(max_length=50, blank=True, null=True)
-    img_recompensa = CloudinaryImageField(folder="recompensas")
-    tipo_recompensa = models.CharField(max_length=50, blank=True, null=True)
-
-class Usuario(models.Model):
-    id_usuario = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    nombre = models.CharField(max_length=50)
-    apellido = models.CharField(max_length=50)
-    correo = models.EmailField(unique=True)
-    password_hash = models.CharField(max_length=128)
-    fecha_nacimiento = models.DateField()
-    fecha_registro = models.DateTimeField(auto_now_add=True)
-    foto_perfil = CloudinaryImageField(folder="usuarios")
-    rol = models.ForeignKey(Rol, on_delete=models.CASCADE, blank=True, null=True, default=1)
-    idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE, blank=True, null=True)
-    tema = models.ForeignKey(Tema, on_delete=models.CASCADE, blank=True, null=True)
-    tarjeta = models.ForeignKey(
-        Desafio,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="usuarios_tarjeta",
-        limit_choices_to={"tipo_recompensa": "Tarjeta"}
-    )
-
-class UsuarioProgresoDesafio(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    desafio = models.ForeignKey(Desafio, on_delete=models.CASCADE)
-    progreso_actual = models.IntegerField(default=0)
-    fecha_completado = models.DateTimeField(blank=True, null=True)
+    def __str__(self):
+        return self.nombre_tema
 
 class Zona(models.Model):
     logo = CloudinaryImageField(folder="zonas")
@@ -68,6 +37,8 @@ class Zona(models.Model):
     mensaje_en = models.TextField(blank=True, null=True)
     descripcion_es = models.TextField(blank=True, null=True)
     descripcion_en = models.TextField(blank=True, null=True)
+    def __str__(self):
+        return self.nombre
 
 class Color(models.Model):
     nombre = models.CharField(max_length=50)
@@ -76,9 +47,13 @@ class Color(models.Model):
     blue = models.PositiveIntegerField(default=0)
     zona = models.ForeignKey(Zona, on_delete=models.CASCADE)
     tema = models.ForeignKey(Tema, on_delete=models.CASCADE, blank=True, null=True)
+    def __str__(self):
+        return f"{self.nombre} - ({self.zona.nombre})"
 
 class TipoRecurso(models.Model):
     nombre_tipo = models.CharField(max_length=50)
+    def __str__(self):
+        return self.nombre_tipo
 
 class MultimediaZona(models.Model):
     img = CloudinaryImageField(folder="multimedia-zonas")
@@ -95,6 +70,8 @@ class Exhibicion(models.Model):
     nombre = models.CharField(max_length=100)
     mensaje_es = models.TextField(blank=True, null=True)
     mensaje_en = models.TextField(blank=True, null=True)
+    def __str__(self):
+        return f"{self.nombre} - ({self.zona.nombre})"
 
 class Objetivo(models.Model):
     exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
@@ -108,6 +85,57 @@ class PaginaExhibicion(models.Model):
     titulo_en = models.CharField(max_length=100, blank=True, null=True)
     contenido_es = models.TextField(blank=True, null=True)
     contenido_en = models.TextField(blank=True, null=True)
+
+class Desafio(models.Model):
+    TIPO_DESAFIO_CHOICES = [
+        ("Escanear", "Escanear"),
+        ("Publicacion", "Publicacion"),
+        ("Opinion", "Opinion"),
+    ]
+
+    TIPO_RECOMPENSA_CHOICES = [
+        ("Insignia", "Insignia"),
+        ("Tarjeta", "Tarjeta"),
+    ]
+
+    nombre_desafio = models.CharField(max_length=50)
+    img_desafio = CloudinaryImageField(folder="desafios")
+    valor_meta = models.IntegerField(blank=True, null=True)
+    descripcion_es = models.TextField(blank=True, null=True)
+    descripcion_en = models.TextField(blank=True, null=True)
+    nombre_recompensa = models.CharField(max_length=50, blank=True, null=True)
+    img_recompensa = CloudinaryImageField(folder="recompensas")
+    tipo_recompensa = models.CharField(max_length=50, blank=True, null=True, choices=TIPO_RECOMPENSA_CHOICES)
+    tipo_desafio = models.CharField(max_length=50, blank=True, null=True, choices=TIPO_DESAFIO_CHOICES)
+    zona = models.ForeignKey(Zona, on_delete=models.CASCADE, blank=True, null=True)
+    exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE, blank=True, null=True)
+
+class Usuario(models.Model):
+    id_usuario = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    nombre = models.CharField(max_length=50)
+    apellido = models.CharField(max_length=50)
+    correo = models.EmailField(unique=True)
+    password_hash = models.CharField(max_length=128)
+    fecha_nacimiento = models.DateField()
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    foto_perfil = CloudinaryImageField(folder="usuarios")
+    rol = models.ForeignKey(Rol, on_delete=models.CASCADE, blank=True, null=True, default=1)
+    idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE, blank=True, null=True, default=1)
+    tema = models.ForeignKey(Tema, on_delete=models.CASCADE, blank=True, null=True, default=1)
+    tarjeta = models.ForeignKey(
+        Desafio,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="usuarios_tarjeta",
+        limit_choices_to={"tipo_recompensa": "Tarjeta"}
+    )
+
+class UsuarioProgresoDesafio(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    desafio = models.ForeignKey(Desafio, on_delete=models.CASCADE)
+    progreso_actual = models.IntegerField(default=0)
+    fecha_completado = models.DateTimeField(blank=True, null=True)
 
 class Escaneo(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
