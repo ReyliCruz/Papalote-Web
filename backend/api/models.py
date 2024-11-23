@@ -4,7 +4,6 @@ from .fields import CloudinaryImageField
 
 # Create your models here.
 
-# Configuración general del museo
 class ConfiguracionGeneral(models.Model):
     nombre_museo = models.CharField(max_length=100)
     logo = CloudinaryImageField(folder="logos")
@@ -15,20 +14,16 @@ class ConfiguracionGeneral(models.Model):
     codigo_acceso = models.CharField(max_length=50)
     nombre_personaje = models.CharField(max_length=100)
 
-# Roles de usuario
 class Rol(models.Model):
     nombre_rol = models.CharField(max_length=50)
 
-# Idiomas disponibles
 class Idioma(models.Model):
     codigo_idioma = models.CharField(max_length=10, unique=True)
     nombre_idioma = models.CharField(max_length=50)
 
-# Temas que prefieren los usuarios
 class Tema(models.Model):
     nombre_tema = models.CharField(max_length=50)
 
-# Desafíos para obtener recompensas
 class Desafio(models.Model):
     nombre_desafio = models.CharField(max_length=50)
     img_desafio = CloudinaryImageField(folder="desafios")
@@ -39,7 +34,6 @@ class Desafio(models.Model):
     img_recompensa = CloudinaryImageField(folder="recompensas")
     tipo_recompensa = models.CharField(max_length=50, blank=True, null=True)
 
-# Modelo de usuario con UUID como clave primaria
 class Usuario(models.Model):
     id_usuario = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nombre = models.CharField(max_length=50)
@@ -49,26 +43,16 @@ class Usuario(models.Model):
     fecha_nacimiento = models.DateField()
     fecha_registro = models.DateTimeField(auto_now_add=True)
     foto_perfil = CloudinaryImageField(folder="usuarios")
-    rol = models.ForeignKey(Rol, on_delete=models.CASCADE, blank=True, null=True)
+    rol = models.ForeignKey(Rol, on_delete=models.CASCADE, blank=True, null=True, default=1)
     idioma = models.ForeignKey(Idioma, on_delete=models.CASCADE, blank=True, null=True)
     tema = models.ForeignKey(Tema, on_delete=models.CASCADE, blank=True, null=True)
-
-    # Relación con desafíos para tarjeta e insignia
     tarjeta = models.ForeignKey(
         Desafio,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name="usuarios_tarjeta",
-        limit_choices_to={"tipo_recompensa": "Tarjeta"}  # Solo desafíos tipo "Tarjeta"
-    )
-    insignia = models.ForeignKey(
-        Desafio,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="usuarios_insignia",
-        limit_choices_to={"tipo_recompensa": "Insignia"}  # Solo desafíos tipo "Insignia"
+        limit_choices_to={"tipo_recompensa": "Tarjeta"}
     )
 
 class UsuarioProgresoDesafio(models.Model):
@@ -76,19 +60,6 @@ class UsuarioProgresoDesafio(models.Model):
     desafio = models.ForeignKey(Desafio, on_delete=models.CASCADE)
     progreso_actual = models.IntegerField(default=0)
     fecha_completado = models.DateTimeField(blank=True, null=True)
-
-# Se dejará pendiente
-class Visita(models.Model):
-    fecha_entrada = models.DateTimeField()
-    fecha_salida = models.DateTimeField()
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    opinion_experiencia = models.TextField(blank=True, null=True)
-#####################
-
-class DialogoPersonaje(models.Model):
-    mensaje_es = models.TextField(blank=True, null=True)
-    mensaje_en = models.TextField(blank=True, null=True)
-    pregunta_quiz = models.BooleanField(default=False)
 
 class Zona(models.Model):
     logo = CloudinaryImageField(folder="zonas")
@@ -143,26 +114,12 @@ class Escaneo(models.Model):
     exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE, blank=True, null=True)
     fecha_escaneo = models.DateTimeField(auto_now_add=True)
 
-# Se dejará pendiente
-class Interaccion(models.Model):
-    fecha_inicio = models.DateTimeField()
-    fecha_finalizacion = models.DateTimeField()
-    exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
-    visita = models.ForeignKey(Visita, on_delete=models.CASCADE)
-#####################
-
 class Opinion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
     calificacion = models.IntegerField(blank=True, null=True)
     descripcion = models.TextField(blank=True, null=True)
     fecha_opinion = models.DateTimeField(auto_now_add=True)
-
-# Se dejará pendiente
-class Emoji(models.Model):
-    nombre = models.CharField(max_length=50)
-    img = CloudinaryImageField(folder="emojis")
-#####################
 
 class Publicacion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
@@ -171,6 +128,52 @@ class Publicacion(models.Model):
     img = CloudinaryImageField(folder="social", blank=True, null=True)
     aceptado = models.BooleanField(default=False)
     exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE, blank=True, null=True)
+
+class Notificacion(models.Model):
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    titulo_es = models.CharField(max_length=100, blank=True, null=True)
+    titulo_en = models.CharField(max_length=100, blank=True, null=True)
+    descripcion_es = models.TextField(blank=True, null=True)
+    descripcion_en = models.TextField(blank=True, null=True)
+
+class Preferencia(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    zona = models.ForeignKey(Zona, on_delete=models.CASCADE)
+    puntaje_quiz = models.IntegerField()
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+
+
+
+# Modelos que no se implementarán #########################
+
+# Se dejará pendiente
+class DialogoPersonaje(models.Model):
+    mensaje_es = models.TextField(blank=True, null=True)
+    mensaje_en = models.TextField(blank=True, null=True)
+    pregunta_quiz = models.BooleanField(default=False)
+#####################
+
+# Se dejará pendiente
+class Visita(models.Model):
+    fecha_entrada = models.DateTimeField()
+    fecha_salida = models.DateTimeField()
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    opinion_experiencia = models.TextField(blank=True, null=True)
+#####################
+
+# Se dejará pendiente
+class Interaccion(models.Model):
+    fecha_inicio = models.DateTimeField()
+    fecha_finalizacion = models.DateTimeField()
+    exhibicion = models.ForeignKey(Exhibicion, on_delete=models.CASCADE)
+    visita = models.ForeignKey(Visita, on_delete=models.CASCADE)
+#####################
+
+# Se dejará pendiente
+class Emoji(models.Model):
+    nombre = models.CharField(max_length=50)
+    img = CloudinaryImageField(folder="emojis")
+#####################
 
 # Se dejará pendiente
 class Reaccion(models.Model):
@@ -187,15 +190,4 @@ class Favorito(models.Model):
     fecha_guardado = models.DateTimeField()
 #####################
 
-class Notificacion(models.Model):
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    titulo_es = models.CharField(max_length=100, blank=True, null=True)
-    titulo_en = models.CharField(max_length=100, blank=True, null=True)
-    descripcion_es = models.TextField(blank=True, null=True)
-    descripcion_en = models.TextField(blank=True, null=True)
-
-class Preferencia(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    zona = models.ForeignKey(Zona, on_delete=models.CASCADE)
-    puntaje_quiz = models.IntegerField()
-    fecha_registro = models.DateTimeField(auto_now_add=True)
+###########################################################

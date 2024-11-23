@@ -139,7 +139,6 @@ class LoginView(APIView):
                      "idioma": usuario.idioma.codigo_idioma if usuario.idioma else None,
                      "tema": usuario.tema.nombre_tema if usuario.tema else None,
                      "tarjeta": usuario.tarjeta.img_recompensa if usuario.tarjeta else None,
-                     "insignia": usuario.insignia.img_recompensa if usuario.insignia else None,
                     },
                     status=status.HTTP_200_OK
                 )
@@ -157,6 +156,22 @@ class CodigoAccesoView(APIView):
             configuracion = ConfiguracionGeneral.objects.first()
             if configuracion:
                 return Response({"codigo_acceso": configuracion.codigo_acceso}, status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": "Configuración general no encontrada."}, status=status.HTTP_404_NOT_FOUND)
+        except ConfiguracionGeneral.DoesNotExist:
+            return Response({"detail": "Configuración general no encontrada."}, status=status.HTTP_404_NOT_FOUND)
+        
+class VerificarCodigoAccesoView(APIView):
+    def post(self, request):
+        codigo_usuario = request.data.get("codigo_acceso", "")
+
+        try:
+            configuracion = ConfiguracionGeneral.objects.first()
+            if configuracion:
+                if configuracion.codigo_acceso == codigo_usuario:
+                    return Response({"detail": "Código válido."}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"detail": "Código inválido."}, status=status.HTTP_401_UNAUTHORIZED)
             else:
                 return Response({"detail": "Configuración general no encontrada."}, status=status.HTTP_404_NOT_FOUND)
         except ConfiguracionGeneral.DoesNotExist:

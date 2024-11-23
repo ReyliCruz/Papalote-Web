@@ -34,6 +34,7 @@ router.register(r'preferencias', PreferenciaViewSet)
 urlpatterns = router.urls + [
     path('login/', LoginView.as_view(), name='login'),
     path('codigo-acceso/', CodigoAccesoView.as_view(), name='codigo-acceso'),
+    path('verificar-codigo/', VerificarCodigoAccesoView.as_view(), name='verificar-codigo'),
     path('zona/<str:name>/', ZonaDetailView.as_view(), name='zona-detail'),
     path('exhibicion/<str:name>/', ExhibicionDetailView.as_view(), name='exhibicion-detail'),
     path('exhibitions-by-zone/', ExhibitionsByZoneView.as_view(), name='exhibitions-by-zone'),
