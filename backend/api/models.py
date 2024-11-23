@@ -135,7 +135,7 @@ class UsuarioProgresoDesafio(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     desafio = models.ForeignKey(Desafio, on_delete=models.CASCADE)
     progreso_actual = models.IntegerField(default=0)
-    fecha_completado = models.DateTimeField(blank=True, null=True)
+    obtenido = models.BooleanField(default=False)
 
 class Escaneo(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)

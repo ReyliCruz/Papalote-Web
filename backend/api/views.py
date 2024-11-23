@@ -254,22 +254,41 @@ class PaginasExhibicionView(APIView):
         serializer = PaginaExhibicionSerializer(paginas, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+    
 class DesafiosUsuarioView(APIView):
     def get(self, request, usuario_id):
         usuario = get_object_or_404(Usuario, id_usuario=usuario_id)
         desafios = Desafio.objects.all()
 
+        completados_ids = UsuarioProgresoDesafio.objects.filter(usuario=usuario, obtenido=True).values_list("desafio_id", flat=True)
+
         desafios_data = []
+
         for desafio in desafios:
-            progreso = self.calcular_progreso(usuario, desafio)
+            if desafio.id in completados_ids:
+                progreso_actual = desafio.valor_meta
+                obtenido = True
+            else:
+                progreso_actual = self.calcular_progreso(usuario, desafio)
+
+                if progreso_actual >= desafio.valor_meta:
+                    UsuarioProgresoDesafio.objects.update_or_create(
+                        usuario=usuario,
+                        desafio=desafio,
+                        defaults={"obtenido": True}
+                    )
+                    obtenido = True
+                else:
+                    obtenido = False
+
             desafio_data = {
                 "id": desafio.id,
                 "nombre_desafio": desafio.nombre_desafio,
                 "descripcion_es": desafio.descripcion_es,
-                "progreso_actual": progreso,
+                "progreso_actual": progreso_actual,
                 "valor_meta": desafio.valor_meta,
                 "img_desafio": desafio.img_desafio if desafio.img_desafio else None,
+                "obtenido": obtenido,
             }
             desafios_data.append(desafio_data)
 
@@ -292,49 +311,66 @@ class DesafiosUsuarioView(APIView):
 
         return 0
 
-class InsigniasView(APIView):
+class BaseRecompensasView(APIView):
+    tipo_recompensa = None
+
     def get(self, request, usuario_id):
+        if not self.tipo_recompensa:
+            return Response({"detail": "Tipo de recompensa no definido."}, status=400)
+
         usuario = get_object_or_404(Usuario, id_usuario=usuario_id)
 
-        desafios = Desafio.objects.filter(tipo_recompensa="Insignia")
+        desafios = Desafio.objects.filter(tipo_recompensa=self.tipo_recompensa)
 
-        insignias_data = []
+        recompensas_data = []
         for desafio in desafios:
             progreso_usuario = UsuarioProgresoDesafio.objects.filter(
                 usuario=usuario, desafio=desafio
             ).first()
 
-            insignia_data = {
+            if not progreso_usuario:
+                progreso_actual = self.calcular_progreso(usuario, desafio)
+                if progreso_actual >= desafio.valor_meta:
+                    progreso_usuario, created = UsuarioProgresoDesafio.objects.get_or_create(
+                        usuario=usuario,
+                        desafio=desafio,
+                        defaults={"obtenido": True}
+                    )
+                else:
+                    progreso_usuario = None
+
+            recompensa_data = {
                 "id": desafio.id,
                 "nombre_recompensa": desafio.nombre_recompensa,
                 "imagen": desafio.img_recompensa if desafio.img_recompensa else None,
-                "obtenido": bool(progreso_usuario and progreso_usuario.fecha_completado),
+                "obtenido": bool(progreso_usuario and progreso_usuario.obtenido),
             }
-            insignias_data.append(insignia_data)
+            recompensas_data.append(recompensa_data)
 
-        return Response(insignias_data, status=status.HTTP_200_OK)
+        return Response(recompensas_data, status=200)
 
-class TarjetasView(APIView):
-    def get(self, request, usuario_id):
-        usuario = get_object_or_404(Usuario, id_usuario=usuario_id)
+    def calcular_progreso(self, usuario, desafio):
+        if desafio.tipo_desafio == "Escanear":
+            if desafio.zona:
+                return Escaneo.objects.filter(usuario=usuario, exhibicion__zona=desafio.zona).values("exhibicion").distinct().count()
+            elif desafio.exhibicion:
+                return Escaneo.objects.filter(usuario=usuario, exhibicion=desafio.exhibicion).count()
+            else:
+                return Escaneo.objects.filter(usuario=usuario).values("exhibicion").distinct().count()
 
-        desafios = Desafio.objects.filter(tipo_recompensa="Tarjeta")
+        elif desafio.tipo_desafio == "Publicacion":
+            return Publicacion.objects.filter(usuario=usuario, exhibicion__isnull=False).count()
 
-        tarjetas_data = []
-        for desafio in desafios:
-            progreso_usuario = UsuarioProgresoDesafio.objects.filter(
-                usuario=usuario, desafio=desafio
-            ).first()
+        elif desafio.tipo_desafio == "Opinion":
+            return Opinion.objects.filter(usuario=usuario).values("exhibicion").distinct().count()
 
-            tarjeta_data = {
-                "id": desafio.id,
-                "nombre_recompensa": desafio.nombre_recompensa,
-                "imagen": desafio.img_recompensa if desafio.img_recompensa else None,
-                "obtenido": bool(progreso_usuario and progreso_usuario.fecha_completado),
-            }
-            tarjetas_data.append(tarjeta_data)
+        return 0
 
-        return Response(tarjetas_data, status=status.HTTP_200_OK)
+class InsigniasView(BaseRecompensasView):
+    tipo_recompensa = "Insignia"
+
+class TarjetasView(BaseRecompensasView):
+    tipo_recompensa = "Tarjeta"
 
 class PublicacionesAceptadasView(APIView):
     def get(self, request):
