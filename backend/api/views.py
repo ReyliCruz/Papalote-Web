@@ -334,7 +334,6 @@ class PublicacionesAceptadasView(APIView):
                 "nombre": usuario.nombre,
                 "foto_perfil": usuario.foto_perfil if usuario.foto_perfil else None,
                 "tarjeta": usuario.tarjeta.img_recompensa if usuario.tarjeta else None,
-                "insignia": usuario.insignia.img_recompensa if usuario.insignia else None,
                 "descripcion": publicacion.descripcion,
                 "img": publicacion.img if publicacion.img else None,
                 "id_exhibicion": publicacion.exhibicion.id if publicacion.exhibicion else None,
