@@ -254,13 +254,19 @@ class ExhibitionsByZoneView(APIView):
                 color = self.rgb_to_hex(primary_color.red, primary_color.green, primary_color.blue)
             else:
                 color = "#CDE5C3"
-            
+
+            multimedia = MultimediaZona.objects.filter(zona=zona)
+            images = [item.img for item in multimedia if item.img]
+
             zone_data = {
                 "id": zona.id,
                 "text": zona.nombre,
                 "color": color,
                 "image": zona.logo if zona.logo else None,
-                "subItems": sub_items
+                "mensaje": zona.mensaje_es if zona.mensaje_es else None,
+                "descripcion": zona.descripcion_es if zona.descripcion_es else None,
+                "subItems": sub_items,
+                "images": images
             }
             
             zones_data.append(zone_data)
