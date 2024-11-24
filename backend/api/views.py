@@ -237,6 +237,10 @@ class ExposicionesTemporalesView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 class ExhibitionsByZoneView(APIView):
+    def rgb_to_hex(self, r, g, b):
+        """Convierte valores RGB a formato hexadecimal."""
+        return f"#{r:02x}{g:02x}{b:02x}"
+
     def get(self, request):
         zonas = Zona.objects.all()
         
@@ -246,7 +250,10 @@ class ExhibitionsByZoneView(APIView):
             sub_items = [{"id": exhibicion.id, "name": exhibicion.nombre} for exhibicion in exhibiciones]
 
             primary_color = Color.objects.filter(zona=zona, nombre='PrimaryColor').first()
-            color = f"rgb({primary_color.red}, {primary_color.green}, {primary_color.blue})" if primary_color else None
+            if primary_color:
+                color = self.rgb_to_hex(primary_color.red, primary_color.green, primary_color.blue)
+            else:
+                color = "#CDE5C3"
             
             zone_data = {
                 "id": zona.id,
@@ -259,7 +266,7 @@ class ExhibitionsByZoneView(APIView):
             zones_data.append(zone_data)
         
         return Response(zones_data)
-    
+  
 class PaginasExhibicionView(APIView):
     def get(self, request, nombre_exhibicion):
         exhibicion = get_object_or_404(Exhibicion, nombre=nombre_exhibicion)
