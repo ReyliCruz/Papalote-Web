@@ -220,6 +220,21 @@ class ExhibicionDetailView(APIView):
         }
         
         return Response(data, status=status.HTTP_200_OK)
+    
+class ExposicionesTemporalesView(APIView):
+    def get(self, request):
+        exposiciones_temporales = Exhibicion.objects.filter(zona__nombre="EXPOSICIONES TEMPORALES")
+        
+        data = [
+            {
+                "id": exhibicion.id,
+                "nombre": exhibicion.nombre,
+                "img": exhibicion.img if exhibicion.img else None,
+            }
+            for exhibicion in exposiciones_temporales
+        ]
+
+        return Response(data, status=status.HTTP_200_OK)
 
 class ExhibitionsByZoneView(APIView):
     def get(self, request):

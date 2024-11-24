@@ -36,6 +36,7 @@ urlpatterns = router.urls + [
     path('codigo-acceso/', CodigoAccesoView.as_view(), name='codigo-acceso'),
     path('verificar-codigo/', VerificarCodigoAccesoView.as_view(), name='verificar-codigo'),
     path('zona/<str:name>/', ZonaDetailView.as_view(), name='zona-detail'),
+    path('exposiciones-temporales/', ExposicionesTemporalesView.as_view(), name='exposiciones-temporales'),
     path('exhibicion/<str:name>/', ExhibicionDetailView.as_view(), name='exhibicion-detail'),
     path('exhibitions-by-zone/', ExhibitionsByZoneView.as_view(), name='exhibitions-by-zone'),
     path('paginas/<str:nombre_exhibicion>/', PaginasExhibicionView.as_view(), name='paginas-exhibicion'),
