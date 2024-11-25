@@ -201,12 +201,13 @@ class PublicacionSerializer(serializers.ModelSerializer):
     
     def validate(self, data):
         """
-        Validar que al menos 'descripcion' o 'img' estén presentes.
+        Validar que al menos 'descripcion' o 'img' estén presentes solo en POST.
         """
-        if not data.get('descripcion') and not data.get('img'):
-            raise serializers.ValidationError(
-                "Debe proporcionar al menos una descripción o una imagen."
-            )
+        if self.context['request'].method == 'POST':
+            if not data.get('descripcion') and not data.get('img'):
+                raise serializers.ValidationError(
+                    "Debe proporcionar al menos una descripción o una imagen."
+                )
         return data
 
     def to_representation(self, instance):
