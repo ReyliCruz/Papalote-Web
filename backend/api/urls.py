@@ -45,5 +45,6 @@ urlpatterns = router.urls + [
     path('tarjetas/<uuid:usuario_id>/', TarjetasView.as_view(), name='tarjetas-usuario'),
     path('publicaciones-aceptadas/', PublicacionesAceptadasView.as_view(), name='publicaciones-aceptadas'),
     path('publicaciones-admin/', PublicacionesAdminView.as_view(), name='publicaciones-admin'),
-    path('exhibicion-completa/<int:id>', ExhibicionCompletaView.as_view(), name='exhibicion-completa')
+    path('exhibicion-completa/<int:id>', ExhibicionCompletaView.as_view(), name='exhibicion-completa'),
+    path('estadisticas', EstadisticasView.as_view(), name='estadisticas')
 ]

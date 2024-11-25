@@ -256,7 +256,7 @@ class ExhibitionsByZoneView(APIView):
                 color = "#CDE5C3"
 
             multimedia = MultimediaZona.objects.filter(zona=zona)
-            images = [item.img for item in multimedia if item.img]
+            images = [{"id": item.id, "img": item.img} for item in multimedia if item.img]
 
             zone_data = {
                 "id": zona.id,
@@ -474,3 +474,143 @@ class PublicacionesAdminView(APIView):
             })
         
         return Response(data, status=status.HTTP_200_OK)
+
+from django.db.models import Count, Avg, Max, Min, F, Q
+from datetime import datetime, timedelta
+
+class EstadisticasView(APIView):
+    def get(self, request):
+        # Configuración General
+        configuracion = ConfiguracionGeneral.objects.first()
+        configuracion_data = {
+            "nombre_museo": configuracion.nombre_museo if configuracion else None,
+            "sede": configuracion.sede if configuracion else None,
+            "logo": configuracion.logo if configuracion and configuracion.logo else None,
+        }
+
+        # Usuarios y Segmentación por Edad
+        total_usuarios = Usuario.objects.count()
+        usuarios_por_edad = Usuario.objects.annotate(
+            edad=(datetime.now().year - F('fecha_nacimiento__year'))
+        ).values("edad").annotate(total=Count("id_usuario")).order_by("edad")
+
+        usuarios_por_rango_edad = {
+            "niños": usuarios_por_edad.filter(edad__lte=12).count(),
+            "adolescentes": usuarios_por_edad.filter(edad__gt=12, edad__lte=18).count(),
+            "adultos": usuarios_por_edad.filter(edad__gt=18, edad__lte=60).count(),
+            "adultos_mayores": usuarios_por_edad.filter(edad__gt=60).count(),
+        }
+
+        # Visitas derivadas de Escaneos
+        total_visitas = Escaneo.objects.distinct("usuario", "fecha_escaneo__date").count()
+        visitas_por_zona = Escaneo.objects.values("exhibicion__zona__nombre").annotate(
+            total=Count("id")
+        ).order_by("-total")
+
+        visitas_por_exhibicion = Escaneo.objects.values("exhibicion__nombre").annotate(
+            total=Count("id")
+        ).order_by("-total")
+
+        visitas_por_dia = Escaneo.objects.extra(
+            select={'day': "DATE(fecha_escaneo)"}
+        ).values('day').annotate(total=Count("id")).order_by('day')
+
+        # Opiniones y Calificaciones
+        total_opiniones = Opinion.objects.count()
+        promedio_calificacion_general = Opinion.objects.aggregate(promedio=Avg("calificacion"))["promedio"]
+
+        opiniones_por_zona = Opinion.objects.values(
+            "exhibicion__zona__nombre"
+        ).annotate(
+            total_opiniones=Count("id"),
+            promedio_calificacion=Avg("calificacion"),
+        ).order_by("-promedio_calificacion")
+
+        opiniones_por_exhibicion = Opinion.objects.values(
+            "exhibicion__nombre"
+        ).annotate(
+            total_opiniones=Count("id"),
+            promedio_calificacion=Avg("calificacion"),
+        ).order_by("-promedio_calificacion")
+
+        # Zonas y Exhibiciones
+        zonas_data = Zona.objects.annotate(
+            total_exhibiciones=Count("exhibicion"),
+            total_visitas=Count("exhibicion__escaneo"),
+            promedio_calificacion=Avg("exhibicion__opinion__calificacion"),
+        ).values(
+            "id", "nombre", "total_exhibiciones", "total_visitas", "promedio_calificacion"
+        ).order_by("-total_visitas")
+
+        exhibiciones_data = Exhibicion.objects.annotate(
+            total_visitas=Count("escaneo"),
+            total_opiniones=Count("opinion"),
+            promedio_calificacion=Avg("opinion__calificacion"),
+        ).values(
+            "id", "nombre", "zona__nombre", "total_visitas", "total_opiniones", "promedio_calificacion", "disponibilidad"
+        ).order_by("-total_visitas")
+
+        exhibiciones_mas_opinadas = exhibiciones_data[:5]
+        exhibiciones_mejor_calificadas = exhibiciones_data.order_by("-promedio_calificacion")[:5]
+        exhibiciones_mas_visitadas = exhibiciones_data[:5]
+        exhibiciones_menos_visitadas = exhibiciones_data.order_by("total_visitas")[:5]
+
+        # Publicaciones
+        total_publicaciones = Publicacion.objects.count()
+        publicaciones_aceptadas = Publicacion.objects.filter(aceptado=True).count()
+        publicaciones_por_exhibicion = Publicacion.objects.values("exhibicion__nombre").annotate(total=Count("id"))
+
+        # Segmentación por Actividad
+        usuarios_activos_30_dias = Escaneo.objects.filter(
+            fecha_escaneo__gte=datetime.now() - timedelta(days=30)
+        ).values("usuario").distinct().count()
+
+        usuarios_no_activos = total_usuarios - usuarios_activos_30_dias
+
+        # Relación Zonas-Opiniones-Visitas
+        zonas_relacionadas = Zona.objects.annotate(
+            total_visitas=Count("exhibicion__escaneo"),
+            promedio_calificacion=Avg("exhibicion__opinion__calificacion"),
+        ).values("nombre", "total_visitas", "promedio_calificacion").order_by("-total_visitas")
+
+        # Dashboard Data
+        data = {
+            "configuracion_general": configuracion_data,
+            "usuarios": {
+                "total": total_usuarios,
+                "por_edad": list(usuarios_por_edad),
+                "por_rango_edad": usuarios_por_rango_edad,
+                "activos_30_dias": usuarios_activos_30_dias,
+                "no_activos": usuarios_no_activos,
+            },
+            "visitas": {
+                "total": total_visitas,
+                "por_dia": list(visitas_por_dia),
+                "por_zona": list(visitas_por_zona),
+                "por_exhibicion": list(visitas_por_exhibicion),
+            },
+            "opiniones": {
+                "total": total_opiniones,
+                "promedio_calificacion_general": promedio_calificacion_general,
+                "por_zona": list(opiniones_por_zona),
+                "por_exhibicion": list(opiniones_por_exhibicion),
+            },
+            "zonas": {
+                "detalle": list(zonas_data),
+                "relacionadas": list(zonas_relacionadas),
+            },
+            "exhibiciones": {
+                "detalle": list(exhibiciones_data),
+                "mas_visitadas": list(exhibiciones_mas_visitadas),
+                "menos_visitadas": list(exhibiciones_menos_visitadas),
+                "mas_opinadas": list(exhibiciones_mas_opinadas),
+                "mejor_calificadas": list(exhibiciones_mejor_calificadas),
+            },
+            "publicaciones": {
+                "total": total_publicaciones,
+                "aceptadas": publicaciones_aceptadas,
+                "por_exhibicion": list(publicaciones_por_exhibicion),
+            },
+        }
+
+        return Response(data, status=200)
