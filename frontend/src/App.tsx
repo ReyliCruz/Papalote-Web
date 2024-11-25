@@ -1,10 +1,18 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { useZones } from './hooks/Zones'
+import { useMenus } from './hooks/Menu'
 
 // Pages
 import Login from './pages/Login';
 import Home from './pages/Home';
 import Settings from './pages/Settings';
 import Zones from './pages/Zones';
+import Notifications from './pages/Notifications';
+import Achievements from './pages/Achievements';
+import Publications from './pages/Publications';
+import Statistics from './pages/Statistics';
+import Users from './pages/Users';
+import Content from './pages/Content';
 
 // Layouts
 import AdminLayout from './layouts/AdminLayout';
@@ -14,11 +22,26 @@ import ZoneLayout from './layouts/ZoneLayout';
 // Templates
 import ZoneTemplate from './templates/ZoneTemplate';
 
-// Data
-import { basicMenu, advancedMenu } from './data/menus';
-import { zones } from './data/zones';
-
 function App() {
+  const { zones, loading, error } = useZones();
+  const { basicMenu, advancedMenu } = useMenus();
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+        <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-lightLime border-opacity-80"></div>
+        <h1 className="mt-6 text-xl font-semibold text-gray-700">
+          Cargando datos...
+        </h1>
+        <p className="text-gray-500">Por favor, espera un momento.</p>
+      </div>
+    );
+  }  
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   return (
     <Router>
       <Routes>
@@ -27,23 +50,31 @@ function App() {
 
         <Route element={<AdminLayout menuItems={basicMenu} />}>
           <Route path="home" element={<Home />} />
+
+          <Route path="contenido" element={<Content />} />
+          <Route path="contenido/zonas" element={<Zones />} />
+          <Route path="contenido/publicaciones" element={<Publications />} />
+          <Route path="contenido/logros" element={<Achievements />} />
+          <Route path="contenido/notificaciones" element={<Notifications />} />
+          
+          <Route path="estadisticas" element={<Statistics />} />
+          <Route path="usuarios" element={<Users />} />
           <Route path="ajustes" element={<Settings />} />
         </Route>
 
         <Route element={<AdminLayout menuItems={advancedMenu} />}>
-          <Route path="zonas" element={<Zones />} />
-
           {zones.map((zone) => (
             <Route key={zone.id} path={zone.text.toLowerCase()}>
               <Route
                 index
                 element={
-                  <ZoneLayout title={zone.text} primaryColor={zone.color}>
+                  <ZoneLayout title={zone.text} primaryColor={zone.color} id={zone.id}>
                     <ZoneTemplate
+                      id = {zone.id}
                       title={zone.text}
                       photo={zone.image}
-                      message={`Bienvenido a la zona ${zone.text}.`}
-                      description={`Descripción detallada de la zona ${zone.text}.`}
+                      message={zone.mensaje}
+                      description={zone.descripcion}
                       primaryColor={zone.color}
                     />
                   </ZoneLayout>
@@ -58,6 +89,7 @@ function App() {
                     <ExhibitionLayout
                       title={subItem.name}
                       primaryColor={zone.color}
+                      id={subItem.id}
                     />
                   }
                 />

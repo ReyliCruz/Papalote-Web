@@ -1,8 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from '../components/Header';
-//import Sidebar from '../components/Sidebar';
-import SidebarTest from '../components/SidebarTest';
+import Sidebar from '../components/Sidebar';
 
 interface AdminLayoutProps {
   menuItems: { name: string; path?: string; subItems?: { name: string; path?: string }[] }[];
@@ -10,11 +9,13 @@ interface AdminLayoutProps {
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ menuItems }) => {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-gray-100">
       <Header />
-      <div className="flex flex-1">
-        <SidebarTest menuItems={menuItems} />
-        <main className="flex-1 p-4">
+
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar menuItems={menuItems} />
+
+        <main className="flex-1 overflow-y-auto p-4">
           <Outlet />
         </main>
       </div>

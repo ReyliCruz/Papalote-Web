@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import MultimediaTemplate from '../templates/MultimediaTemplate';
 
 interface ZoneLayoutProps {
+  id: number,
   title: string;
   primaryColor: string;
   children?: React.ReactNode;
@@ -13,6 +14,7 @@ const ZoneLayout: React.FC<ZoneLayoutProps> = ({
   title,
   primaryColor,
   children,
+  id,
 }) => {
   const [activeSection, setActiveSection] = useState<string>('Datos básicos');
 
@@ -50,7 +52,7 @@ const ZoneLayout: React.FC<ZoneLayoutProps> = ({
         {activeSection === 'Datos básicos' ? (
           <div>{children}</div>
         ) : (
-          <MultimediaTemplate />
+          <MultimediaTemplate zoneId={id}/>
         )}
       </div>
     </div>
