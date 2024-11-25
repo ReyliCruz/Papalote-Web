@@ -282,6 +282,39 @@ class PaginasExhibicionView(APIView):
         serializer = PaginaExhibicionSerializer(paginas, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ExhibicionCompletaView(APIView):
+    def get(self, request, id):
+        exhibicion = get_object_or_404(Exhibicion, id=id)
+        
+        objetivos = Objetivo.objects.filter(exhibicion=exhibicion).values(
+            'descripcion_es'
+        )
+        
+        paginas = PaginaExhibicion.objects.filter(exhibicion=exhibicion).values(
+            'id', 'titulo_es', 'contenido_es', 'img'
+        )
+        
+        opiniones = Opinion.objects.filter(exhibicion=exhibicion).values(
+            'id', 'descripcion', 'calificacion', 'fecha_opinion', 'usuario__nombre', 'usuario__apellido'
+        )
+
+        data = {
+            "id": exhibicion.id,
+            "nombre": exhibicion.nombre,
+            "zona": exhibicion.zona.nombre,
+            "img": exhibicion.img if exhibicion.img else None,
+            "piso": exhibicion.piso,
+            "disponibilidad": exhibicion.disponibilidad,
+            "latitud": exhibicion.latitud,
+            "longitud": exhibicion.longitud,
+            "mensaje_es": exhibicion.mensaje_es,
+            "objetivos": list(objetivos),
+            "paginas": list(paginas),
+            "opiniones": list(opiniones),
+        }
+        
+        return Response(data, status=status.HTTP_200_OK)
     
 class DesafiosUsuarioView(APIView):
     def get(self, request, usuario_id):
