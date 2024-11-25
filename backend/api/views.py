@@ -288,7 +288,7 @@ class ExhibicionCompletaView(APIView):
         exhibicion = get_object_or_404(Exhibicion, id=id)
         
         objetivos = Objetivo.objects.filter(exhibicion=exhibicion).values(
-            'descripcion_es'
+            'id', 'descripcion_es'
         )
         
         paginas = PaginaExhibicion.objects.filter(exhibicion=exhibicion).values(
