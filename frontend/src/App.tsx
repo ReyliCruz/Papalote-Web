@@ -10,7 +10,7 @@ import Zones from './pages/Zones';
 import Notifications from './pages/Notifications';
 import Achievements from './pages/Achievements';
 import Publications from './pages/Publications';
-import Statistics from './pages/Statistics';
+import Statistics from './pages/StatisticsTest';
 import Users from './pages/Users';
 import Content from './pages/Content';
 
