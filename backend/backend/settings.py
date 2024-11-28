@@ -158,22 +158,6 @@ PAPALOTE_API_KEY=env('PAPALOTE_API_KEY')
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-from corsheaders.defaults import default_headers
-
-# Permitir encabezados adicionales
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    'X-API-KEY',  # Agrega aquí tu encabezado personalizado
-]
-
-# Opcional: Si necesitas permitir métodos adicionales (si no están incluidos por defecto)
-CORS_ALLOW_METHODS = [
-    'GET',
-    'POST',
-    'PUT',
-    'DELETE',
-    'OPTIONS',
-]
-
 # Cloudinary
 
 cloudinary.config(
